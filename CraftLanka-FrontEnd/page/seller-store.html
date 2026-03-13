@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Seller Store</title>
+
+  <style>
+
+    body{
+      font-family:Arial;
+      background:#f6efe6;
+      padding:40px;
+    }
+
+    .products{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:20px;
+    }
+
+    .card{
+      background:white;
+      padding:15px;
+      border-radius:10px;
+      text-align:center;
+    }
+
+    .card img{
+      width:100%;
+      border-radius:6px;
+    }
+
+    button{
+      background:#d17842;
+      border:none;
+      padding:10px;
+      color:white;
+      cursor:pointer;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<h2 id="storeName"></h2>
+
+<div class="products" id="productGrid"></div>
+
+<script>
+
+  // read seller id from URL
+  const params = new URLSearchParams(window.location.search);
+  const sellerId = params.get("sellerId");
+
+  // example products (later this comes from Spring Boot API)
+  let products=[
+    {sellerId:1,name:"Wood Elephant",price:3200,img:"https://picsum.photos/200"},
+    {sellerId:1,name:"Wood Mask",price:2800,img:"https://picsum.photos/201"},
+    {sellerId:2,name:"Wood Statue",price:4500,img:"https://picsum.photos/202"}
+  ];
+
+  let html="";
+
+  products
+          .filter(p=>p.sellerId==sellerId)
+          .forEach(p=>{
+            html+=`
+<div class="card">
+<img src="${p.img}">
+<h4>${p.name}</h4>
+<p>LKR ${p.price}</p>
+<button>Add to Cart</button>
+</div>
+`;
+          });
+
+  document.getElementById("productGrid").innerHTML=html;
+
+</script>
+
+</body>
+</html>

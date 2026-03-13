@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CraftLanka Sellers</title>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#f7efe5;
+        }
+
+        /* HEADER */
+
+        header{
+            background:#8a4f2d;
+            color:white;
+            padding:20px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        nav a{
+            color:white;
+            text-decoration:none;
+            margin-left:20px;
+            font-weight:bold;
+        }
+
+        /* PAGE TITLE */
+
+        .title{
+            text-align:center;
+            margin-top:40px;
+            color:#5a321c;
+        }
+
+        /* SELLER GRID */
+
+        .grid{
+            max-width:1100px;
+            margin:40px auto;
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:25px;
+        }
+
+        /* SELLER CARD */
+
+        .seller{
+            background:white;
+            border-radius:12px;
+            overflow:hidden;
+            box-shadow:0 5px 15px rgba(0,0,0,0.1);
+            cursor:pointer;
+            transition:0.3s;
+            text-align:center;
+        }
+
+        .seller:hover{
+            transform:translateY(-5px);
+            box-shadow:0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .seller img{
+            width:100%;
+            height:200px;
+            object-fit:cover;
+        }
+
+        .seller h3{
+            margin:10px 0;
+            color:#5a321c;
+        }
+
+        .seller p{
+            color:#777;
+            padding-bottom:15px;
+        }
+
+        /* FOOTER */
+
+        footer{
+            background:#8a4f2d;
+            color:white;
+            text-align:center;
+            padding:15px;
+            margin-top:40px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <h2>CraftLanka</h2>
+
+    <nav>
+        <a href="../index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="login.html">Login</a>
+    </nav>
+
+</header>
+
+
+<h1 class="title">Discover Craft Sellers</h1>
+
+
+<div class="grid" id="sellerGrid"></div>
+
+
+<footer>
+    © 2026 CraftLanka Marketplace
+</footer>
+
+
+<script>
+
+    /* Example seller data (later load from backend API) */
+
+    let sellers = [
+
+        {
+            id:1,
+            name:"Nimal Wood Crafts",
+            image:"https://images.unsplash.com/photo-1519710164239-da123dc03ef4",
+            description:"Traditional handmade wood carvings"
+        },
+
+        {
+            id:2,
+            name:"Lakshan Carvings",
+            image:"https://images.unsplash.com/photo-1581783898377-1c85bf937427",
+            description:"Authentic Sri Lankan wooden statues"
+        },
+
+        {
+            id:3,
+            name:"Heritage Wood Art",
+            image:"https://images.unsplash.com/photo-1607346256330-dee7af15f7c5",
+            description:"Handcrafted decorative wooden art"
+        }
+
+    ];
+
+    let html="";
+
+    sellers.forEach(s=>{
+
+        html+=`
+
+<div class="seller" onclick="openStore(${s.id})">
+
+<img src="${s.image}">
+
+<h3>${s.name}</h3>
+
+<p>${s.description}</p>
+
+</div>
+
+`;
+
+    });
+
+    document.getElementById("sellerGrid").innerHTML = html;
+
+
+    /* Open seller store */
+
+    function openStore(id){
+
+        window.location.href="seller-store.html?sellerId="+id;
+
+    }
+
+</script>
+
+</body>
+</html>

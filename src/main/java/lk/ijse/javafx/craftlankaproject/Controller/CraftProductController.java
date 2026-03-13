@@ -2,8 +2,8 @@ package lk.ijse.javafx.craftlankaproject.Controller;
 
 import jakarta.validation.Valid;
 import lk.ijse.javafx.craftlankaproject.dto.CraftProductDtO;
-import lk.ijse.javafx.craftlankaproject.service.CraftProductService;
-import lk.ijse.javafx.craftlankaproject.util.APIResponse;
+import lk.ijse.javafx.craftlankaproject.dto.APIResponse;
+import lk.ijse.javafx.craftlankaproject.service.impl.CraftProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +17,14 @@ import java.util.List;
 public class CraftProductController {
 
     @Autowired
-    private CraftProductService craftProductService;
+    private CraftProductServiceImpl craftProductServiceImpl;
 
     @PostMapping
-    public ResponseEntity<APIResponse<String>> addProduct(@RequestBody @Valid CraftProductDtO craftProductDtO) {
-        craftProductService.addProduct(craftProductDtO);
+    public ResponseEntity<APIResponse> addProduct(@RequestBody @Valid CraftProductDtO craftProductDtO) {
+        craftProductServiceImpl.addProduct(craftProductDtO);
 
         return new ResponseEntity<>(
-                new APIResponse<>(201,"Craft Product Added", null),
+                new APIResponse(201,"Craft Product Added", null),
                 HttpStatus.CREATED
         );
     }
@@ -35,26 +35,26 @@ public class CraftProductController {
             @PathVariable Long id,
             @RequestBody CraftProductDtO craftProductDtO) {
 
-        craftProductService.updateProduct(id, craftProductDtO);
+        craftProductServiceImpl.updateProduct(id, craftProductDtO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<APIResponse<String>> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<APIResponse> deleteProduct(@PathVariable CraftProductDtO id) {
 
-        craftProductService.deleteProduct(id);
+        craftProductServiceImpl.deleteProduct(id);
 
         return ResponseEntity.ok(
-                new APIResponse<>(200, "Product Deleted", null)
+                new APIResponse(200, "Product Deleted", null)
         );
     }
 
     @GetMapping
-    public ResponseEntity<APIResponse<List<CraftProductDtO>>> getAllProducts() {
+    public ResponseEntity<APIResponse> getAllProducts() {
 
-        List<CraftProductDtO> products = craftProductService.getAllProducts();
+        List<CraftProductDtO> products = craftProductServiceImpl.getAllProducts();
 
         return ResponseEntity.ok(
-                new APIResponse<>(200, "Product List Retrieved", products)
+                new APIResponse(200, "Product List Retrieved", products)
         );
     }
 

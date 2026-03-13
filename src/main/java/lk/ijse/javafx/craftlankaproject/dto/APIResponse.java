@@ -1,4 +1,4 @@
-package lk.ijse.javafx.craftlankaproject.util;
+package lk.ijse.javafx.craftlankaproject.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class APIResponse<T> {
+public class APIResponse {
     private int status;
     private String message;
-    private T data;
+    private Object data;
 }

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Orders</title>
+
+  <style>
+
+    body{
+      font-family:Arial;
+      background:#f7efe5;
+      padding:40px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    th,td{
+      padding:12px;
+      border-bottom:1px solid #ddd;
+    }
+
+    .status{
+      padding:5px 10px;
+      border-radius:5px;
+    }
+
+    .pending{background:orange;color:white;}
+    .shipped{background:green;color:white;}
+
+  </style>
+
+</head>
+
+<body>
+
+<h2>Orders</h2>
+
+<table>
+
+  <tr>
+    <th>ID</th>
+    <th>Customer</th>
+    <th>Total</th>
+    <th>Status</th>
+  </tr>
+
+  <tr>
+    <td>1001</td>
+    <td>Kasun</td>
+    <td>4500</td>
+    <td class="status pending">Pending</td>
+  </tr>
+
+  <tr>
+    <td>1002</td>
+    <td>Nimal</td>
+    <td>2500</td>
+    <td class="status shipped">Shipped</td>
+  </tr>
+
+</table>
+
+</body>
+</html>

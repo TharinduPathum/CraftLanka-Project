@@ -51,7 +51,7 @@ public class CraftProductServiceImpl implements CraftProductService {
     }
 
     @Override
-    public void deleteProduct(Long craftProductDtO) {
+    public void deleteProduct(CraftProductDtO craftProductDtO) {
 
         Optional<CraftProduct> product =
                 craftProductRepository.findById(craftProductDtO.getId());

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Custom Craft Request</title>
+
+  <style>
+
+    body{
+      font-family: Arial;
+      background:#f6efe6;
+      margin:0;
+    }
+
+    /* Header */
+
+    header{
+      background:#8a4f2d;
+      color:white;
+      padding:20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    header a{
+      color:white;
+      text-decoration:none;
+      margin-left:20px;
+    }
+
+    /* Container */
+
+    .container{
+      max-width:700px;
+      margin:50px auto;
+      background:white;
+      padding:40px;
+      border-radius:10px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Form */
+
+    h2{
+      text-align:center;
+      margin-bottom:30px;
+    }
+
+    label{
+      display:block;
+      margin-top:15px;
+      font-weight:bold;
+    }
+
+    input, textarea, select{
+      width:100%;
+      padding:10px;
+      margin-top:8px;
+      border:1px solid #ccc;
+      border-radius:5px;
+    }
+
+    textarea{
+      resize:none;
+      height:120px;
+    }
+
+    /* Button */
+
+    button{
+      margin-top:20px;
+      width:100%;
+      padding:12px;
+      background:#d17842;
+      border:none;
+      color:white;
+      font-size:16px;
+      border-radius:5px;
+      cursor:pointer;
+    }
+
+    button:hover{
+      background:#b96332;
+    }
+
+    /* Decorative craft pattern */
+
+    .art-border{
+      height:6px;
+      background:linear-gradient(90deg,#d17842,#8a4f2d,#d17842);
+      margin-bottom:20px;
+      border-radius:5px;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<header>
+
+  <h2>CraftLanka</h2>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="customer-dashboard.html">Dashboard</a>
+  </nav>
+
+</header>
+
+<div class="container">
+
+  <div class="art-border"></div>
+
+  <h2>Request a Custom Craft</h2>
+
+  <label>Craft Type</label>
+  <select id="type">
+    <option>Wood Craft</option>
+    <option>Clay Craft</option>
+    <option>Batik Art</option>
+    <option>Jewelry</option>
+    <option>Other</option>
+  </select>
+
+  <label>Craft Title</label>
+  <input id="title" placeholder="Example: Personalized Wooden Elephant">
+
+  <label>Description</label>
+  <textarea id="description" placeholder="Describe the craft you want. Example: A wooden elephant with my name carved on it."></textarea>
+
+  <label>Budget (LKR)</label>
+  <input id="budget" type="number" placeholder="Example: 5000">
+
+  <label>Upload Reference Image</label>
+  <input type="file" id="image">
+
+  <label>Delivery Deadline</label>
+  <input type="date" id="deadline">
+
+  <button onclick="submitRequest()">Send Request</button>
+
+</div>
+
+<script>
+
+  function submitRequest(){
+
+    let title=document.getElementById("title").value;
+    let description=document.getElementById("description").value;
+
+    if(title==="" || description===""){
+      alert("Please fill required fields");
+      return;
+    }
+
+    alert("Custom request submitted successfully!");
+
+  }
+
+</script>
+
+</body>
+</html>

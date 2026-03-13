@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Details</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            background:#f7efe5;
+            padding:40px;
+        }
+
+        .container{
+            display:flex;
+            gap:40px;
+        }
+
+        img{
+            width:350px;
+            border-radius:10px;
+        }
+
+        button{
+            background:#d17842;
+            border:none;
+            padding:12px;
+            color:white;
+            margin-top:10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <img src="https://picsum.photos/400">
+
+    <div>
+
+        <h2>Wooden Elephant</h2>
+
+        <p>Beautiful handmade Sri Lankan wooden craft.</p>
+
+        <h3>LKR 3200</h3>
+
+        <button onclick="addCart()">Add to Cart</button>
+
+    </div>
+
+</div>
+
+<script>
+
+    function addCart(){
+        alert("Item added to cart");
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Craft Products</title>
+
+  <style>
+
+    body{
+      margin:0;
+      font-family:Arial;
+      background:#f7efe5;
+    }
+
+    /* HEADER */
+
+    header{
+      background:#8a4f2d;
+      color:white;
+      padding:20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    nav a{
+      color:white;
+      text-decoration:none;
+      margin-left:20px;
+      font-weight:bold;
+    }
+
+    /* TITLE */
+
+    h1{
+      text-align:center;
+      margin-top:30px;
+      color:#5a321c;
+    }
+
+    /* PRODUCT GRID */
+
+    .grid{
+      max-width:1200px;
+      margin:40px auto;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:25px;
+    }
+
+    /* PRODUCT CARD */
+
+    .product{
+      background:white;
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:0 5px 15px rgba(0,0,0,0.1);
+      transition:0.3s;
+      padding-bottom:15px;
+    }
+
+    .product:hover{
+      transform:translateY(-5px);
+      box-shadow:0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .product img{
+      width:100%;
+      height:200px;
+      object-fit:cover;
+    }
+
+    /* PRODUCT TEXT */
+
+    .product h3{
+      margin:10px;
+      color:#5a321c;
+    }
+
+    .price{
+      margin-left:10px;
+      font-weight:bold;
+    }
+
+    /* SELLER */
+
+    .seller{
+      margin-left:10px;
+      font-size:14px;
+      color:#555;
+    }
+
+    .seller span{
+      color:#8a4f2d;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    .seller span:hover{
+      text-decoration:underline;
+    }
+
+    /* BUTTON */
+
+    button{
+      background:#d17842;
+      border:none;
+      color:white;
+      padding:10px;
+      margin:10px;
+      border-radius:5px;
+      cursor:pointer;
+    }
+
+    button:hover{
+      background:#b96130;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<header>
+
+  <h2>CraftLanka</h2>
+
+  <nav>
+    <a href="../index.html">Home</a>
+    <a href="./seller.html">Sellers</a>
+    <a href="./cart.html">Cart</a>
+  </nav>
+
+</header>
+
+<h1>Handcrafted Products</h1>
+
+<div class="grid" id="productGrid"></div>
+
+<script>
+
+  /* Example data (later from Spring Boot API) */
+
+  let products=[
+
+    {
+      name:"Wooden Elephant",
+      price:3200,
+      image:"https://picsum.photos/300?1",
+      sellerId:1,
+      sellerName:"Nimal Wood Crafts"
+    },
+
+    {
+      name:"Wood Carving Mask",
+      price:2800,
+      image:"https://picsum.photos/300?2",
+      sellerId:2,
+      sellerName:"Lakshan Carvings"
+    },
+
+    {
+      name:"Decorative Wood Statue",
+      price:4500,
+      image:"https://picsum.photos/300?3",
+      sellerId:1,
+      sellerName:"Nimal Wood Crafts"
+    },
+
+    {
+      name:"Handmade Wall Art",
+      price:3500,
+      image:"https://picsum.photos/300?4",
+      sellerId:3,
+      sellerName:"Heritage Wood Art"
+    }
+
+  ];
+
+  let html="";
+
+  products.forEach(p=>{
+
+    html+=`
+
+<div class="product">
+
+<img src="${p.image}">
+
+<h3>${p.name}</h3>
+
+<p class="price">LKR ${p.price}</p>
+
+<p class="seller">
+Crafted by
+<span onclick="openStore(${p.sellerId})">
+${p.sellerName}
+</span>
+</p>
+
+<button>Add to Cart</button>
+
+</div>
+
+`;
+
+  });
+
+  document.getElementById("productGrid").innerHTML=html;
+
+
+  /* OPEN SELLER STORE */
+
+  function openStore(id){
+
+    window.location.href="seller-store.html?sellerId="+id;
+
+  }
+
+</script>
+
+</body>
+</html>

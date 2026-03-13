@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manage Products</title>
+
+  <style>
+
+    body{
+      font-family:Arial;
+      padding:40px;
+      background:#f5efe6;
+    }
+
+    input{
+      padding:10px;
+      margin:5px;
+    }
+
+    button{
+      background:#d17842;
+      border:none;
+      color:white;
+      padding:10px;
+    }
+
+    table{
+      width:100%;
+      margin-top:20px;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<h2>Manage Products</h2>
+
+<input id="name" placeholder="Product Name">
+<input id="price" placeholder="Price">
+
+<button onclick="addProduct()">Add</button>
+
+<table id="table"></table>
+
+<script>
+
+  function addProduct(){
+
+    let name=document.getElementById("name").value;
+    let price=document.getElementById("price").value;
+
+    let row=`<tr><td>${name}</td><td>${price}</td></tr>`;
+
+    document.getElementById("table").innerHTML+=row;
+
+  }
+
+</script>
+
+</body>
+</html>

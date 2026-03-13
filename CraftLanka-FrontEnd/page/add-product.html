@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Product</title>
+
+  <style>
+
+    body{
+      font-family:Arial;
+      background:#f5efe6;
+      padding:40px;
+    }
+
+    .container{
+      width:400px;
+      background:white;
+      padding:25px;
+      border-radius:10px;
+      box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    input,textarea{
+      width:100%;
+      padding:10px;
+      margin:10px 0;
+      border:1px solid #ccc;
+      border-radius:5px;
+    }
+
+    button{
+      background:#d17842;
+      border:none;
+      color:white;
+      padding:12px;
+      width:100%;
+      cursor:pointer;
+      border-radius:5px;
+      font-weight:bold;
+    }
+
+    button:hover{
+      background:#b65f2c;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <h2>Add New Product</h2>
+
+  <input id="name" placeholder="Product Name">
+
+  <textarea id="description" placeholder="Description"></textarea>
+
+  <input id="price" type="number" placeholder="Price">
+
+  <input id="image" type="file">
+
+  <button onclick="addProduct()">Add Product</button>
+
+</div>
+
+<script>
+
+  function addProduct(){
+
+    const name = document.getElementById("name").value;
+    const description = document.getElementById("description").value;
+    const price = document.getElementById("price").value;
+    const image = document.getElementById("image").files[0];
+
+    let formData = new FormData();
+
+    formData.append("name",name);
+    formData.append("description",description);
+    formData.append("price",price);
+    formData.append("image",image);
+
+    fetch("http://localhost:8080/api/v1/products",{
+
+      method:"POST",
+      body:formData
+
+    })
+            .then(res=>res.text())
+            .then(data=>{
+              alert("Product added successfully");
+            });
+
+  }
+
+</script>
+
+</body>
+</html>
