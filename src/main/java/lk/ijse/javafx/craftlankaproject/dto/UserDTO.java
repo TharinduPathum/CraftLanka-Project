@@ -5,6 +5,8 @@ import lk.ijse.javafx.craftlankaproject.entity.Role;
 public class UserDTO {
 
     private Long id;
+    private String name;
+    private String email;
     private String username;
     private Role role;
 }

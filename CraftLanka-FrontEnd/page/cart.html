@@ -1,76 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Your Cart</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart - CraftLanka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-
-    body{
-      font-family:Arial;
-      background:#faf3e8;
-      padding:40px;
+    :root {
+      --primary-brown: #5d4037;
+      --bg-cream: #f9f3ee;
+      --text-dark: #4e342e;
+      --accent-orange: #e67e22;
+      --accent-green: #689f38;
+      --card-shadow: 0 10px 25px rgba(0,0,0,0.05);
     }
 
-    table{
-      width:100%;
-      border-collapse:collapse;
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-dark);
+      padding: 40px 5%;
+      background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
     }
 
-    th,td{
-      padding:12px;
-      border-bottom:1px solid #ddd;
+    .cart-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
     }
 
-    button{
-      background:#8a4f2d;
-      color:white;
-      border:none;
-      padding:8px;
+    h2 {
+      margin-bottom: 30px;
+      color: var(--primary-brown);
+      display: flex;
+      align-items: center;
+      gap: 15px;
     }
 
+    /* --- TABLE STYLES --- */
+    table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+    th {
+      text-align: left;
+      padding: 15px;
+      border-bottom: 2px solid #f0f0f0;
+      color: #8d6e63;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+    td { padding: 20px 15px; border-bottom: 1px solid #eee; }
+
+    .prod-detail { display: flex; align-items: center; gap: 15px; }
+    .prod-img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
+    .prod-name { font-weight: 600; }
+
+    .btn-remove {
+      color: #d32f2f; background: #ffebee; border: none;
+      padding: 6px 10px; border-radius: 6px; cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn-remove:hover { background: #d32f2f; color: white; }
+
+    /* --- SUMMARY SECTION --- */
+    .cart-summary {
+      text-align: right;
+      border-top: 2px solid var(--bg-cream);
+      padding-top: 20px;
+    }
+    .total-row { font-size: 1.4rem; font-weight: 600; margin-bottom: 25px; }
+
+    /* --- BUTTONS --- */
+    .action-group { display: flex; justify-content: flex-end; gap: 15px; }
+
+    button {
+      padding: 12px 30px; border-radius: 8px; font-weight: 600;
+      cursor: pointer; transition: 0.3s; font-size: 1rem;
+    }
+
+    .btn-checkout {
+      background: var(--primary-brown); color: white; border: none;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .btn-checkout:hover { background: var(--accent-green); transform: translateY(-2px); }
+
+    .btn-cancel {
+      background: none; border: 2px solid #ddd; color: #888;
+    }
+    .btn-cancel:hover { background: #eee; color: var(--text-dark); border-color: #bbb; }
+
+    /* --- EMPTY STATE --- */
+    .empty-msg { text-align: center; padding: 40px 0; color: #aaa; }
   </style>
-
 </head>
 
 <body>
 
-<h2>Your Cart</h2>
+<div class="cart-container">
+  <h2><i class="fas fa-shopping-basket"></i> Your Shopping Basket</h2>
 
-<table>
+  <table id="cartTable">
+    <thead>
+    <tr>
+      <th>Product</th>
+      <th>Price</th>
+      <th>Qty</th>
+      <th>Subtotal</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody id="cartItems">
+    </tbody>
+  </table>
 
-  <tr>
-    <th>Product</th>
-    <th>Price</th>
-    <th>Qty</th>
-    <th>Total</th>
-  </tr>
+  <div id="emptyCartMessage" class="empty-msg" style="display:none;">
+    <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 15px; display: block;"></i>
+    Your cart is currently empty.
+  </div>
 
-  <tr>
-    <td>Clay Vase</td>
-    <td>2500</td>
-    <td>1</td>
-    <td>2500</td>
-  </tr>
+  <div class="cart-summary" id="cartSummary">
+    <div class="total-row">
+      <span>Total: </span>
+      <span id="grandTotal" style="color: var(--accent-orange);">LKR 0</span>
+    </div>
 
-</table>
+    <div class="action-group">
+      <button class="btn-cancel" onclick="goToProducts()">Cancel & Continue Shopping</button>
+      <button class="btn-checkout" onclick="checkout()">
+        Checkout <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
 
-<br>
 
-<button onclick="checkout()">Checkout</button>
+</div>
 
 <script>
+  // 1. GET DATA FROM LOCALSTORAGE
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  function checkout(){
-    alert("Proceed to payment");
+  function renderCart() {
+    const itemsContainer = document.getElementById("cartItems");
+    const summary = document.getElementById("cartSummary");
+    const emptyMsg = document.getElementById("emptyCartMessage");
+    const table = document.getElementById("cartTable");
+
+    if (cart.length === 0) {
+      table.style.display = "none";
+      summary.style.display = "none";
+      emptyMsg.style.display = "block";
+      return;
+    }
+
+    table.style.display = "table";
+    summary.style.display = "block";
+    emptyMsg.style.display = "none";
+
+    let total = 0;
+    itemsContainer.innerHTML = cart.map((item, index) => {
+      const itemPrice = parseFloat(item.price);
+      total += itemPrice;
+      return `
+                <tr>
+                    <td>
+                        <div class="prod-detail">
+                            <img src="${item.imageUrl}" class="prod-img" onerror="this.src='https://via.placeholder.com/60'">
+                            <div>
+                                <div class="prod-name">${item.name}</div>
+                                <div style="font-size:0.7rem; color:#999;">SKU: #00${item.id}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>LKR ${itemPrice.toLocaleString()}</td>
+                    <td>1</td>
+                    <td style="font-weight:600;">LKR ${itemPrice.toLocaleString()}</td>
+                    <td style="text-align:right;">
+                        <button class="btn-remove" onclick="removeItem(${index})">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+    }).join('');
+
+    document.getElementById("grandTotal").innerText = `LKR ${total.toLocaleString()}`;
   }
 
-</script>
+  // 2. REMOVE ITEM LOGIC
+  function removeItem(index) {
+    cart.splice(index, 1); // Remove from array
+    localStorage.setItem("cart", JSON.stringify(cart)); // Update storage
+    renderCart(); // Refresh UI
+  }
 
-</body>
-</html></title>
-</head>
-<body>
+  // 3. NAVIGATION
+  function goToProducts() {
+    // Navigates to your marketplace page
+    window.location.href = "./all-products.html";
+  }
+
+  function checkout() {
+    if(cart.length === 0) return;
+    alert("Thank you for your order! Proceeding to secure payment...");
+    // Here you would typically send 'cart' to your backend via fetch()
+  }
+
+  // Run on load
+  window.onload = renderCart;
+</script>
 
 </body>
 </html>

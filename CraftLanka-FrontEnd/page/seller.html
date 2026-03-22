@@ -1,185 +1,201 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CraftLanka Sellers</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Artisans | CraftLanka</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-
-        body{
-            margin:0;
-            font-family:Arial;
-            background:#f7efe5;
+        :root {
+            --primary-brown: #5d4037;
+            --accent-orange: #e67e22;
+            --bg-cream: #f9f3ee;
+            --text-dark: #4e342e;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
-        /* HEADER */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-cream); color: var(--text-dark); line-height: 1.6; }
 
-        header{
-            background:#8a4f2d;
-            color:white;
-            padding:20px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
+        /* --- HEADER --- */
+        header {
+            background: white;
+            padding: 15px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.4rem; font-weight: 600; color: var(--primary-brown); text-decoration: none; }
+        .logo i { color: var(--accent-orange); }
+        nav { display: flex; gap: 25px; align-items: center; }
+        nav a { text-decoration: none; color: var(--text-dark); font-weight: 500; font-size: 0.9rem; transition: 0.3s; }
+        nav a:hover, nav a.active { color: var(--accent-orange); }
+
+        /* --- HERO AREA --- */
+        .page-header {
+            text-align: center;
+            padding: 60px 20px 20px;
+            background: linear-gradient(to bottom, #fff, var(--bg-cream));
+        }
+        .page-header h1 { font-size: 2.5rem; color: var(--primary-brown); margin-bottom: 10px; }
+        .page-header p { color: #8d6e63; max-width: 600px; margin: 0 auto; }
+
+        /* --- SELLER GRID --- */
+        .grid {
+            max-width: 1200px;
+            margin: 40px auto 80px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 35px;
+            padding: 0 20px;
         }
 
-        nav a{
-            color:white;
-            text-decoration:none;
-            margin-left:20px;
-            font-weight:bold;
+        /* --- SELLER CARD --- */
+        .seller-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: 0.4s;
+            text-align: center;
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .seller-card:hover { transform: translateY(-10px); }
+
+        .banner-img { height: 120px; background: #d7ccc8; overflow: hidden; }
+        .banner-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; filter: grayscale(30%); }
+
+        .profile-area { margin-top: -50px; position: relative; }
+        .profile-img {
+            width: 100px; height: 100px;
+            border-radius: 50%; border: 5px solid white;
+            object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        /* PAGE TITLE */
+        .seller-info { padding: 20px 25px 30px; }
+        .seller-info h3 { font-size: 1.25rem; color: var(--primary-brown); margin-bottom: 5px; }
 
-        .title{
-            text-align:center;
-            margin-top:40px;
-            color:#5a321c;
+        .location { font-size: 0.8rem; color: #999; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .description { font-size: 0.9rem; color: #666; margin-bottom: 20px; height: 50px; overflow: hidden; }
+
+        .stats {
+            display: flex; justify-content: space-around;
+            border-top: 1px solid #eee; border-bottom: 1px solid #eee;
+            padding: 15px 0; margin-bottom: 20px;
         }
+        .stat-item span { display: block; font-weight: 600; color: var(--primary-brown); }
+        .stat-item label { font-size: 0.7rem; color: #aaa; text-transform: uppercase; }
 
-        /* SELLER GRID */
-
-        .grid{
-            max-width:1100px;
-            margin:40px auto;
-            display:grid;
-            grid-template-columns:repeat(3,1fr);
-            gap:25px;
+        .view-btn {
+            background: var(--primary-brown); color: white; border: none;
+            padding: 12px 30px; border-radius: 30px; cursor: pointer;
+            font-weight: 600; font-size: 0.85rem; width: 100%; transition: 0.3s;
         }
+        .view-btn:hover { background: var(--accent-orange); }
 
-        /* SELLER CARD */
-
-        .seller{
-            background:white;
-            border-radius:12px;
-            overflow:hidden;
-            box-shadow:0 5px 15px rgba(0,0,0,0.1);
-            cursor:pointer;
-            transition:0.3s;
-            text-align:center;
-        }
-
-        .seller:hover{
-            transform:translateY(-5px);
-            box-shadow:0 8px 20px rgba(0,0,0,0.2);
-        }
-
-        .seller img{
-            width:100%;
-            height:200px;
-            object-fit:cover;
-        }
-
-        .seller h3{
-            margin:10px 0;
-            color:#5a321c;
-        }
-
-        .seller p{
-            color:#777;
-            padding-bottom:15px;
-        }
-
-        /* FOOTER */
-
-        footer{
-            background:#8a4f2d;
-            color:white;
-            text-align:center;
-            padding:15px;
-            margin-top:40px;
-        }
-
+        footer { background: var(--primary-brown); color: white; text-align: center; padding: 40px 20px; }
     </style>
-
 </head>
-
 <body>
 
 <header>
-
-    <h2>CraftLanka</h2>
-
+    <a href="../index.html" class="logo"><i class="fas fa-leaf"></i> CraftLanka</a>
     <nav>
         <a href="../index.html">Home</a>
         <a href="products.html">Products</a>
+        <a href="sellers.html" class="active">Artisans</a>
         <a href="login.html">Login</a>
     </nav>
-
 </header>
 
-
-<h1 class="title">Discover Craft Sellers</h1>
-
-
-<div class="grid" id="sellerGrid"></div>
-
-
-<footer>
-    © 2026 CraftLanka Marketplace
-</footer>
-
-
-<script>
-
-    /* Example seller data (later load from backend API) */
-
-    let sellers = [
-
-        {
-            id:1,
-            name:"Nimal Wood Crafts",
-            image:"https://images.unsplash.com/photo-1519710164239-da123dc03ef4",
-            description:"Traditional handmade wood carvings"
-        },
-
-        {
-            id:2,
-            name:"Lakshan Carvings",
-            image:"https://images.unsplash.com/photo-1581783898377-1c85bf937427",
-            description:"Authentic Sri Lankan wooden statues"
-        },
-
-        {
-            id:3,
-            name:"Heritage Wood Art",
-            image:"https://images.unsplash.com/photo-1607346256330-dee7af15f7c5",
-            description:"Handcrafted decorative wooden art"
-        }
-
-    ];
-
-    let html="";
-
-    sellers.forEach(s=>{
-
-        html+=`
-
-<div class="seller" onclick="openStore(${s.id})">
-
-<img src="${s.image}">
-
-<h3>${s.name}</h3>
-
-<p>${s.description}</p>
-
+<div class="page-header">
+    <h1>Meet Our Artisans</h1>
+    <p>Connecting you directly with the skilled carvers keeping Sri Lankan tradition alive.</p>
 </div>
 
-`;
+<div class="grid" id="sellerGrid">
+</div>
 
-    });
+<footer>
+    <p>© 2026 CraftLanka | Supporting Local Craftsmanship</p>
+</footer>
 
-    document.getElementById("sellerGrid").innerHTML = html;
+<script>
+    const sellers = [
+        {
+            id: 1,
+            name: "Nimal Wood Crafts",
+            location: "Ambalangoda, SL",
+            image: "https://i.pravatar.cc/150?u=nimal",
+            banner: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=400",
+            description: "Mastering the art of Kaduru wood masks for over 20 years.",
+            items: 24,
+            rating: 4.9
+        },
+        {
+            id: 2,
+            name: "Lakshan Carvings",
+            location: "Galle, SL",
+            image: "https://i.pravatar.cc/150?u=lakshan",
+            banner: "https://images.unsplash.com/photo-1581783898377-1c85bf937427?w=400",
+            description: "Specializing in Ebony statues and elephant figurines.",
+            items: 12,
+            rating: 4.7
+        },
+        {
+            id: 3,
+            name: "Heritage Wood Art",
+            location: "Kandy, SL",
+            image: "https://i.pravatar.cc/150?u=heritage",
+            banner: "https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?w=400",
+            description: "Bringing ancient Temple carvings into modern home decor.",
+            items: 18,
+            rating: 5.0
+        }
+    ];
 
+    function renderSellers() {
+        const grid = document.getElementById('sellerGrid');
+        grid.innerHTML = sellers.map(s => `
+            <div class="seller-card">
+                <div class="banner-img">
+                    <img src="${s.banner}" alt="banner">
+                </div>
+                <div class="profile-area">
+                    <img src="${s.image}" class="profile-img" alt="${s.name}">
+                </div>
+                <div class="seller-info">
+                    <h3>${s.name}</h3>
+                    <div class="location"><i class="fas fa-map-marker-alt"></i> ${s.location}</div>
+                    <p class="description">${s.description}</p>
 
-    /* Open seller store */
+                    <div class="stats">
+                        <div class="stat-item">
+                            <span>${s.items}</span>
+                            <label>Products</label>
+                        </div>
+                        <div class="stat-item">
+                            <span>${s.rating} ★</span>
+                            <label>Rating</label>
+                        </div>
+                    </div>
 
-    function openStore(id){
-
-        window.location.href="seller-store.html?sellerId="+id;
-
+                    <button class="view-btn" onclick="openStore(${s.id})">View Artisan Store</button>
+                </div>
+            </div>
+        `).join('');
     }
 
+    function openStore(id) {
+        window.location.href = "seller-store.html?sellerId=" + id;
+    }
+
+    renderSellers();
 </script>
 
 </body>

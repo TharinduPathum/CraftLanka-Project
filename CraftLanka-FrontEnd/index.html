@@ -1,191 +1,361 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CraftLanka</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CraftLanka | Authentic Sri Lankan Wooden Crafts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-
-        body{
-            margin:0;
-            font-family:Arial;
-            background:#f6efe6;
+        :root {
+            --primary-brown: #5d4037;
+            --accent-orange: #e67e22;
+            --bg-cream: #f9f3ee;
+            --text-dark: #4e342e;
+            --card-shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
 
-        /* HEADER */
-
-        header{
-            background:#8a4f2d;
-            color:white;
-            padding:20px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
         }
 
-        nav a{
-            color:white;
-            margin-left:20px;
-            text-decoration:none;
-            font-weight:bold;
+        body {
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.6;
         }
 
-        /* HERO */
-
-        .hero{
-            height:350px;
-            background:url("https://images.unsplash.com/photo-1616628182505-6c3f3c9a2e2e") center/cover;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            color:white;
-            font-size:38px;
-            font-weight:bold;
-            text-shadow:2px 2px 5px black;
+        /* --- NAVIGATION --- */
+        header {
+            background: white;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        /* SECTION TITLE */
-
-        .section-title{
-            text-align:center;
-            margin-top:40px;
-            font-size:28px;
-            color:#5a321c;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-brown);
+            text-decoration: none;
         }
 
-        /* GALLERY */
+        .logo i { color: var(--accent-orange); }
 
-        .products{
-            padding:40px;
-            display:grid;
-            grid-template-columns:repeat(3,1fr);
-            gap:25px;
-            max-width:1100px;
-            margin:auto;
+        nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
         }
 
-        /* IMAGE CARD */
-
-        .card{
-            background:white;
-            border-radius:12px;
-            overflow:hidden;
-            box-shadow:0 5px 12px rgba(0,0,0,0.1);
-            cursor:pointer;
-            transition:0.3s;
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: 0.3s;
         }
 
-        .card:hover{
-            transform:scale(1.05);
-            box-shadow:0 8px 20px rgba(0,0,0,0.2);
+        nav a:hover { color: var(--accent-orange); }
+
+        .btn-login {
+            background: var(--primary-brown);
+            color: white !important;
+            padding: 10px 25px;
+            border-radius: 30px;
+            transition: 0.3s;
         }
 
-        .card img{
-            width:100%;
-            height:230px;
-            object-fit:cover;
+        .btn-login:hover { background: var(--accent-orange); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 500px;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+            url('./assets/Main-Background.png') center/cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 0 20px;
         }
 
-        /* IMAGE TITLE */
-
-        .card h3{
-            text-align:center;
-            padding:15px;
-            color:#5a321c;
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
         }
 
-        /* FOOTER */
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 700px;
+            font-weight: 300;
+        }
 
-        footer{
-            background:#8a4f2d;
-            color:white;
-            text-align:center;
-            padding:15px;
-            margin-top:40px;
+        .cta-btn {
+            background: var(--accent-orange);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .cta-btn:hover { transform: scale(1.05); background: white; color: var(--accent-orange); }
+
+        /* --- FEATURED SECTION --- */
+        .container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            color: var(--primary-brown);
+            margin-bottom: 10px;
+        }
+
+        .section-header .divider {
+            width: 80px;
+            height: 4px;
+            background: var(--accent-orange);
+            margin: 0 auto;
+        }
+
+        /* --- PRODUCT GRID --- */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: 0.4s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .card:hover .card-img img { transform: scale(1.1); }
+
+        .card-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary-brown);
+        }
+
+        .price {
+            font-weight: 600;
+            color: var(--accent-orange);
+            font-size: 1.1rem;
+        }
+
+        .wood-type {
+            font-size: 0.8rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--primary-brown);
+            color: white;
+            padding: 60px 8% 20px;
+            text-align: center;
+            background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: block;
+            color: white;
+            text-decoration: none;
+        }
+
+        .social-links {
+            margin-bottom: 30px;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 15px;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+
+        .social-links a:hover { opacity: 1; color: var(--accent-orange); }
+
+        .copyright {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
         }
 
     </style>
-
 </head>
-
 <body>
 
 <header>
-
-    <h2>CraftLanka</h2>
-
+    <a href="index.html" class="logo">
+        <i class="fas fa-leaf"></i> CraftLanka
+    </a>
     <nav>
-        <a href="./page/products.html">Products</a>
-        <a href="./page/login.html">Login</a>
-        <a href="./page/register.html">Register</a>
+        <a href="#featured">Collection</a>
+        <a href="#">About Us</a>
+        <a href="#">Contact</a>
+        <a href="./page/login.html" class="btn-login">Login</a>
     </nav>
-
 </header>
 
-<div class="hero">
-    Discover Sri Lankan Wooden Crafts
-</div>
-
-<h2 class="section-title">Featured Wooden Handicrafts</h2>
-
-<section class="products">
-
-    <!-- ITEM 1 -->
-
-    <div class="card" onclick="goProducts()">
-        <img src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5">
-        <h3>Wooden Elephant</h3>
-    </div>
-
-    <!-- ITEM 2 -->
-
-    <div class="card" onclick="goProducts()">
-        <img src="https://images.unsplash.com/photo-1616628182505-6c3f3c9a2e2e">
-        <h3>Wood Carving Mask</h3>
-    </div>
-
-    <!-- ITEM 3 -->
-
-    <div class="card" onclick="goProducts()">
-        <img src="https://images.unsplash.com/photo-1592928302636-c83cf1cdbec3">
-        <h3>Hand Carved Statue</h3>
-    </div>
-
-    <!-- ITEM 4 -->
-
-    <div class="card" onclick="goProducts()">
-        <img src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261">
-        <h3>Wooden Buddha Statue</h3>
-    </div>
-
-    <!-- ITEM 5 -->
-
-    <div class="card" onclick="goProducts()">
-        <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4">
-        <h3>Decorative Wood Art</h3>
-    </div>
-
-    <!-- ITEM 6 -->
-
-    <div class="card" onclick="goProducts()">
-        <img src="https://images.unsplash.com/photo-1581783898377-1c85bf937427">
-        <h3>Traditional Wooden Craft</h3>
-    </div>
-
+<section class="hero">
+    <h1>The Art of Wood</h1>
+    <p>Discover hand-carved masterpieces by Sri Lanka's finest artisans. From sacred statues to traditional masks, every piece tells a story.</p>
+    <a href="#featured" class="cta-btn">View Collection</a>
 </section>
 
+<div class="container" id="featured">
+    <div class="section-header">
+        <h2>Featured Wooden Handicrafts</h2>
+        <div class="divider"></div>
+    </div>
+
+    <section class="products-grid">
+        <div class="card" onclick="location.href='./page/products.html'">
+            <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?w=500" alt="Wooden Elephant">
+            </div>
+            <div class="card-content">
+                <span class="wood-type">Ebony Wood</span>
+                <h3>Traditional Hand-Carved Elephant</h3>
+                <p class="price">LKR 8,500</p>
+            </div>
+        </div>
+
+        <div class="card" onclick="location.href='./page/products.html'">
+            <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1616628182505-6c3f3c9a2e2e?w=500" alt="Wood Carving Mask">
+            </div>
+            <div class="card-content">
+                <span class="wood-type">Kaduru Wood</span>
+                <h3>Gara Yaka Ritual Mask</h3>
+                <p class="price">LKR 4,200</p>
+            </div>
+        </div>
+
+        <div class="card" onclick="location.href='./page/products.html'">
+            <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1592928302636-c83cf1cdbec3?w=500" alt="Hand Carved Statue">
+            </div>
+            <div class="card-content">
+                <span class="wood-type">Teak</span>
+                <h3>Meditating Buddha Statue</h3>
+                <p class="price">LKR 12,500</p>
+            </div>
+        </div>
+
+        <div class="card" onclick="location.href='./page/products.html'">
+            <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=500" alt="Decorative Wood Art">
+            </div>
+            <div class="card-content">
+                <span class="wood-type">Mahogany</span>
+                <h3>Ancient Wall Panel Art</h3>
+                <p class="price">LKR 15,000</p>
+            </div>
+        </div>
+
+        <div class="card" onclick="location.href='./page/products.html'">
+            <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=500" alt="Table Decor">
+            </div>
+            <div class="card-content">
+                <span class="wood-type">Satinwood</span>
+                <h3>Traditional Jewelry Box</h3>
+                <p class="price">LKR 3,800</p>
+            </div>
+        </div>
+
+        <div class="card" onclick="location.href='./page/products.html'">
+            <div class="card-img">
+                <img src="https://images.unsplash.com/photo-1581783898377-1c85bf937427?w=500" alt="Ornament">
+            </div>
+            <div class="card-content">
+                <span class="wood-type">Mixed Wood</span>
+                <h3>Fisherman Figurine</h3>
+                <p class="price">LKR 2,900</p>
+            </div>
+        </div>
+    </section>
+</div>
+
 <footer>
-    © 2026 CraftLanka | Sri Lankan Handmade Crafts
+    <a href="#" class="footer-logo">CraftLanka</a>
+    <p style="margin-bottom: 20px; opacity: 0.8;">Authentic woodcarvings from the heart of Sri Lanka.</p>
+    <div class="social-links">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+    </div>
+    <div class="copyright">
+        © 2026 CraftLanka | Purely Sri Lankan Handmade Wooden Crafts
+    </div>
 </footer>
-
-<script>
-
-    function goProducts(){
-        window.location.href="./page/products.html";
-    }
-
-    console.log("CraftLanka Home Loaded");
-
-</script>
 
 </body>
 </html>

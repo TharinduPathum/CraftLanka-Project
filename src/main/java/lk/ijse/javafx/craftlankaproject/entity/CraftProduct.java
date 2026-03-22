@@ -15,9 +15,14 @@ public class CraftProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
     private double price;
     private int quantity;
+
+    @Column(name = "image_url", columnDefinition = "TEXT")
     private String imageUrl;
 
     @ManyToOne

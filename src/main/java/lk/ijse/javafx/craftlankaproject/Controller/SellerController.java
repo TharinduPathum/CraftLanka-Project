@@ -1,4 +1,4 @@
 package lk.ijse.javafx.craftlankaproject.Controller;
 
-public class UserController {
+public class SellerController {
 }

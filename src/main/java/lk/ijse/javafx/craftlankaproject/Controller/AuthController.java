@@ -14,16 +14,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
-    @PostMapping("signup")
+    @PostMapping("/register")
     public ResponseEntity<APIResponse> saveUser(@RequestBody RegisterDTO registerDTO){
         return ResponseEntity.ok(new APIResponse(
                 200,"User registered successfully",userService.saveUser(registerDTO)));
 
     }
-    @PostMapping("signin")
-    public ResponseEntity<APIResponse>loginUser(@RequestBody AuthDTO authDTO){
+    @PostMapping("/login")
+    public ResponseEntity<APIResponse> loginUser(@RequestBody AuthDTO authDTO){
         return ResponseEntity.ok(new APIResponse(
-                200,"User registered successfully",userService.authenticate(authDTO)));
-
+                200, "Login successful", userService.authenticate(authDTO)));
     }
 }

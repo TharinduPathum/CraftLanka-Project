@@ -48,7 +48,9 @@
 
   <input id="name" placeholder="Full Name">
   <input id="email" placeholder="Email">
+  <input id="username" placeholder="Store Username">
   <input id="password" type="password" placeholder="Password">
+
 
   <select id="role">
     <option value="customer">Customer</option>
@@ -61,17 +63,59 @@
 
 <script>
 
-  function register(){
+  async function register() {
+    // 1. Grab values from the inputs
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const role = document.getElementById("role").value;
 
-    let name=document.getElementById("name").value;
-
-    if(name===""){
-      alert("Enter name");
+    // 2. Simple Client-side Validation
+    if (!name || !email || !username || !password) {
+      alert("Please fill in all fields");
       return;
     }
 
-    alert("Account Created");
+    // 3. Prepare the data object
+    const userData = {
+      name: name,
+      email: email,
+      username: username,
+      password: password,
+      role: role
+    };
 
+    try {
+      // 4. Send the AJAX request
+      const response = await fetch('http://localhost:8080/api/v1/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      });
+
+      // 5. Handle the response
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Registration Successful!");
+
+        // Navigate based on the selected role
+        if (role === "customer") {
+          window.location.href = "./cart.html";
+        } else if (role === "seller") {
+          window.location.href = "./seller-dashboard.html";
+        }
+      } else {
+        alert("Registration Failed: " + result.message);
+      }
+
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Could not connect to server.");
+    }
   }
 
 </script>

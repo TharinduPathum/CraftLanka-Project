@@ -1,222 +1,225 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Craft Products</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Handcrafted Collection | CraftLanka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-
-    body{
-      margin:0;
-      font-family:Arial;
-      background:#f7efe5;
+    :root {
+      --primary-brown: #5d4037;
+      --accent-orange: #e67e22;
+      --bg-cream: #f9f3ee;
+      --text-dark: #4e342e;
+      --card-shadow: 0 10px 25px rgba(0,0,0,0.06);
     }
 
-    /* HEADER */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body { background-color: var(--bg-cream); color: var(--text-dark); line-height: 1.6; }
 
-    header{
-      background:#8a4f2d;
-      color:white;
-      padding:20px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
+    /* --- HEADER (Same as Home) --- */
+    header {
+      background: white;
+      padding: 15px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 1.4rem; font-weight: 600; color: var(--primary-brown); text-decoration: none; }
+    .logo i { color: var(--accent-orange); }
+    nav { display: flex; gap: 25px; align-items: center; }
+    nav a { text-decoration: none; color: var(--text-dark); font-weight: 500; font-size: 0.9rem; transition: 0.3s; }
+    nav a:hover, nav a.active { color: var(--accent-orange); }
+    .cart-icon { position: relative; font-size: 1.2rem; }
+    .cart-count { position: absolute; -10px; right: -10px; background: var(--accent-orange); color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 50%; }
+
+    /* --- PAGE TITLE & FILTERS --- */
+    .page-intro { text-align: center; padding: 60px 20px 40px; }
+    .page-intro h1 { font-size: 2.2rem; color: var(--primary-brown); margin-bottom: 10px; }
+
+    .filter-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 8px 20px;
+      border-radius: 25px;
+      border: 1px solid #ddd;
+      background: white;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: 0.3s;
+    }
+    .filter-btn.active, .filter-btn:hover { background: var(--primary-brown); color: white; border-color: var(--primary-brown); }
+
+    /* --- PRODUCT GRID --- */
+    .grid {
+      max-width: 1200px;
+      margin: 0 auto 60px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+      padding: 0 20px;
     }
 
-    nav a{
-      color:white;
-      text-decoration:none;
-      margin-left:20px;
-      font-weight:bold;
+    .product-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+
+    .img-container { position: relative; height: 220px; overflow: hidden; }
+    .img-container img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+    .product-card:hover .img-container img { transform: scale(1.1); }
+
+    .wishlist-heart {
+      position: absolute; top: 15px; right: 15px;
+      background: rgba(255,255,255,0.8); width: 35px; height: 35px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: #ff4757; cursor: pointer;
     }
 
-    /* TITLE */
+    .details { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+    .wood-tag { font-size: 0.7rem; text-transform: uppercase; color: var(--accent-orange); font-weight: 600; letter-spacing: 1px; margin-bottom: 5px; }
+    .details h3 { font-size: 1.1rem; color: var(--primary-brown); margin-bottom: 8px; }
 
-    h1{
-      text-align:center;
-      margin-top:30px;
-      color:#5a321c;
+    .seller-link { font-size: 0.8rem; color: #888; margin-bottom: 15px; }
+    .seller-link span { color: var(--primary-brown); font-weight: 600; cursor: pointer; text-decoration: underline; }
+
+    .bottom-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+    .price { font-size: 1.2rem; font-weight: 600; color: var(--text-dark); }
+
+    .add-btn {
+      background: var(--primary-brown); color: white; border: none;
+      width: 40px; height: 40px; border-radius: 10px;
+      cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;
     }
+    .add-btn:hover { background: var(--accent-orange); transform: rotate(90deg); }
 
-    /* PRODUCT GRID */
-
-    .grid{
-      max-width:1200px;
-      margin:40px auto;
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:25px;
-    }
-
-    /* PRODUCT CARD */
-
-    .product{
-      background:white;
-      border-radius:12px;
-      overflow:hidden;
-      box-shadow:0 5px 15px rgba(0,0,0,0.1);
-      transition:0.3s;
-      padding-bottom:15px;
-    }
-
-    .product:hover{
-      transform:translateY(-5px);
-      box-shadow:0 8px 20px rgba(0,0,0,0.2);
-    }
-
-    .product img{
-      width:100%;
-      height:200px;
-      object-fit:cover;
-    }
-
-    /* PRODUCT TEXT */
-
-    .product h3{
-      margin:10px;
-      color:#5a321c;
-    }
-
-    .price{
-      margin-left:10px;
-      font-weight:bold;
-    }
-
-    /* SELLER */
-
-    .seller{
-      margin-left:10px;
-      font-size:14px;
-      color:#555;
-    }
-
-    .seller span{
-      color:#8a4f2d;
-      font-weight:bold;
-      cursor:pointer;
-    }
-
-    .seller span:hover{
-      text-decoration:underline;
-    }
-
-    /* BUTTON */
-
-    button{
-      background:#d17842;
-      border:none;
-      color:white;
-      padding:10px;
-      margin:10px;
-      border-radius:5px;
-      cursor:pointer;
-    }
-
-    button:hover{
-      background:#b96130;
-    }
-
+    footer { background: var(--primary-brown); color: white; text-align: center; padding: 40px 20px; }
   </style>
-
 </head>
-
 <body>
 
 <header>
-
-  <h2>CraftLanka</h2>
-
+  <a href="../index.html" class="logo"><i class="fas fa-leaf"></i> CraftLanka</a>
   <nav>
     <a href="../index.html">Home</a>
-    <a href="./seller.html">Sellers</a>
-    <a href="./cart.html">Cart</a>
+    <a href="#" class="active">Collection</a>
+    <a href="./seller.html">Artisans</a>
+    <a href="./login.html">Login</a>
+    <a href="./cart.html" class="cart-icon">
+      <i class="fas fa-shopping-basket"></i>
+      <span class="cart-count">0</span>
+    </a>
   </nav>
-
 </header>
 
-<h1>Handcrafted Products</h1>
-
-<div class="grid" id="productGrid"></div>
-
-<script>
-
-  /* Example data (later from Spring Boot API) */
-
-  let products=[
-
-    {
-      name:"Wooden Elephant",
-      price:3200,
-      image:"https://picsum.photos/300?1",
-      sellerId:1,
-      sellerName:"Nimal Wood Crafts"
-    },
-
-    {
-      name:"Wood Carving Mask",
-      price:2800,
-      image:"https://picsum.photos/300?2",
-      sellerId:2,
-      sellerName:"Lakshan Carvings"
-    },
-
-    {
-      name:"Decorative Wood Statue",
-      price:4500,
-      image:"https://picsum.photos/300?3",
-      sellerId:1,
-      sellerName:"Nimal Wood Crafts"
-    },
-
-    {
-      name:"Handmade Wall Art",
-      price:3500,
-      image:"https://picsum.photos/300?4",
-      sellerId:3,
-      sellerName:"Heritage Wood Art"
-    }
-
-  ];
-
-  let html="";
-
-  products.forEach(p=>{
-
-    html+=`
-
-<div class="product">
-
-<img src="${p.image}">
-
-<h3>${p.name}</h3>
-
-<p class="price">LKR ${p.price}</p>
-
-<p class="seller">
-Crafted by
-<span onclick="openStore(${p.sellerId})">
-${p.sellerName}
-</span>
-</p>
-
-<button>Add to Cart</button>
-
+<div class="page-intro">
+  <h1>Wooden Masterpieces</h1>
+  <p>Authentic, hand-carved art from local Sri Lankan artisans.</p>
 </div>
 
-`;
+<div class="filter-container">
+  <button class="filter-btn active">All Crafts</button>
+  <button class="filter-btn">Ebony</button>
+  <button class="filter-btn">Teak</button>
+  <button class="filter-btn">Mahogany</button>
+  <button class="filter-btn">Kaduru</button>
+</div>
 
-  });
+<div class="grid" id="productGrid">
+</div>
 
-  document.getElementById("productGrid").innerHTML=html;
+<footer>
+  <p>© 2026 CraftLanka | Authentic Handcrafted Wooden Collection</p>
+</footer>
 
+<script>
+  const products = [
+    {
+      id: 1,
+      name: "Traditional Kaduru Mask",
+      wood: "Kaduru Wood",
+      price: 3200,
+      image: "https://images.unsplash.com/photo-1616628182505-6c3f3c9a2e2e?w=500",
+      sellerName: "Ruwan Handicrafts"
+    },
+    {
+      id: 2,
+      name: "Royal Ebony Elephant",
+      wood: "Ebony",
+      price: 8500,
+      image: "https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?w=500",
+      sellerName: "Lakshan Carvings"
+    },
+    {
+      id: 3,
+      name: "Teak Meditating Buddha",
+      wood: "Teak",
+      price: 12500,
+      image: "https://images.unsplash.com/photo-1592928302636-c83cf1cdbec3?w=500",
+      sellerName: "Heritage Wood Art"
+    },
+    {
+      id: 4,
+      name: "Mahogany Fruit Bowl",
+      wood: "Mahogany",
+      price: 3500,
+      image: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=500",
+      sellerName: "Nimal Wood Crafts"
+    }
+  ];
 
-  /* OPEN SELLER STORE */
-
-  function openStore(id){
-
-    window.location.href="seller-store.html?sellerId="+id;
-
+  function renderProducts() {
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = products.map(p => `
+            <div class="product-card">
+                <div class="img-container">
+                    <img src="${p.image}" alt="${p.name}">
+                    <div class="wishlist-heart"><i class="far fa-heart"></i></div>
+                </div>
+                <div class="details">
+                    <span class="wood-tag">${p.wood}</span>
+                    <h3>${p.name}</h3>
+                    <p class="seller-link">By <span>${p.sellerName}</span></p>
+                    <div class="bottom-row">
+                        <p class="price">LKR ${p.price.toLocaleString()}</p>
+                        <button class="add-btn" onclick="addToCart(${p.id})">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
   }
 
+  function addToCart(id) {
+    let user = localStorage.getItem("user");
+    if(!user) {
+      alert("Please login as a customer to purchase items.");
+      window.location.href="login.html";
+      return;
+    }
+    alert("Added to your basket!");
+  }
+
+  // Initialize
+  renderProducts();
 </script>
 
 </body>

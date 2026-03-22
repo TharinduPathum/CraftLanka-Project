@@ -20,12 +20,15 @@
       border-radius:10px;
       width:300px;
       box-shadow:0 4px 10px rgba(0,0,0,0.1);
+      text-align:center;
     }
 
     input{
       width:100%;
       padding:10px;
       margin:10px 0;
+      border:1px solid #ccc;
+      border-radius:5px;
     }
 
     button{
@@ -34,6 +37,25 @@
       background:#8a4f2d;
       color:white;
       border:none;
+      border-radius:5px;
+      cursor:pointer;
+      margin-top:10px;
+    }
+
+    button:hover{
+      background:#b96130;
+    }
+
+    .register-link{
+      margin-top:15px;
+      display:block;
+      font-size:14px;
+      color:#8a4f2d;
+      text-decoration:none;
+    }
+
+    .register-link:hover{
+      text-decoration:underline;
     }
 
   </style>
@@ -51,21 +73,49 @@
 
   <button onclick="login()">Login</button>
 
+  <!-- Hyperlink to Register page -->
+  <a href="./register.html" class="register-link">Don't have an account? Register here</a>
+
 </div>
 
 <script>
 
-  function login(){
+  async function login() {
+    let username = document.getElementById("email").value.trim();
+    let pass = document.getElementById("password").value.trim();
 
-    let email=document.getElementById("email").value;
-    let pass=document.getElementById("password").value;
-
-    if(email=="" || pass==""){
-      alert("Fill all fields");
+    if (username === "" || pass === "") {
+      alert("Please fill all fields");
       return;
     }
 
-    alert("Login Success");
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: username, password: pass })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // result.data contains the AuthResponseDTO
+        localStorage.setItem("token", result.data.access_token);
+
+        const userRole = result.data.role; // This will be "CUSTOMER" or "SELLER"
+
+        if (userRole === "CUSTOMER") {
+          window.location.href = "./cart.html";
+        } else if (userRole === "SELLER") {
+          window.location.href = "./seller-dashboard.html";
+        }
+      } else {
+        alert("Login Failed: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Could not connect to server.");
+    }
 
   }
 

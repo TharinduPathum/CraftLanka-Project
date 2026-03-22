@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/products")
 public class CraftProductController {
@@ -19,7 +19,7 @@ public class CraftProductController {
     @Autowired
     private CraftProductServiceImpl craftProductServiceImpl;
 
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<APIResponse> addProduct(@RequestBody @Valid CraftProductDtO craftProductDtO) {
         craftProductServiceImpl.addProduct(craftProductDtO);
 
@@ -41,14 +41,14 @@ public class CraftProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<APIResponse> deleteProduct(@PathVariable CraftProductDtO id) {
 
-        craftProductServiceImpl.deleteProduct(id);
+        craftProductServiceImpl.deleteProductById(id.getId());
 
         return ResponseEntity.ok(
                 new APIResponse(200, "Product Deleted", null)
         );
     }
 
-    @GetMapping
+    @GetMapping("my-products")
     public ResponseEntity<APIResponse> getAllProducts() {
 
         List<CraftProductDtO> products = craftProductServiceImpl.getAllProducts();

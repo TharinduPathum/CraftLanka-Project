@@ -1,61 +1,319 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Manage Products</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Inventory - CraftLanka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-
-    body{
-      font-family:Arial;
-      padding:40px;
-      background:#f5efe6;
+    :root {
+      --sidebar-bg: #5d4037;
+      --main-bg: #f9f3ee;
+      --text-dark: #4e342e;
+      --accent-orange: #e67e22;
+      --accent-green: #689f38;
+      --card-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
 
-    input{
-      padding:10px;
-      margin:5px;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body { background-color: var(--main-bg); display: flex; height: 100vh; overflow: hidden; color: var(--text-dark); }
 
-    button{
-      background:#d17842;
-      border:none;
-      color:white;
-      padding:10px;
-    }
+    /* --- SIDEBAR --- */
+    .sidebar { width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; position: relative; background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png'); }
+    .logo-section { padding: 30px 20px; display: flex; align-items: center; gap: 10px; font-size: 1.4rem; font-weight: 600; }
+    .nav-menu { flex-grow: 1; margin-top: 20px; }
+    .nav-item { padding: 15px 25px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.3s; opacity: 0.8; font-size: 0.95rem; text-decoration: none; color: white; }
+    .nav-item.active { background: rgba(255, 255, 255, 0.15); opacity: 1; border-left: 5px solid #d4a373; }
+    .nav-item:hover { background: rgba(255, 255, 255, 0.1); opacity: 1; }
+    .user-profile { padding: 20px; text-align: center; z-index: 2; background: rgba(0,0,0,0.1); }
+    .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #fff; object-fit: cover; margin-bottom: 10px; }
 
-    table{
-      width:100%;
-      margin-top:20px;
-    }
+    /* --- MAIN CONTENT --- */
+    .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); }
+    .page-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
+    .page-title h1 { font-size: 1.8rem; }
 
+    .inventory-card { background: white; border-radius: 15px; padding: 25px; box-shadow: var(--card-shadow); min-height: 400px; }
+
+    /* --- EMPTY STATE --- */
+    .empty-state { text-align: center; padding: 60px 20px; display: none; }
+    .empty-state i { font-size: 4rem; color: #d7ccc8; margin-bottom: 20px; }
+    .empty-state h3 { color: var(--sidebar-bg); margin-bottom: 10px; }
+
+    /* --- TABLE --- */
+    table { width: 100%; border-collapse: collapse; display: none; }
+    th { text-align: left; padding: 15px; border-bottom: 2px solid #f0f0f0; color: #8d6e63; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
+    td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
+
+    .prod-img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
+    .stock-tag { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; background: #e8f5e9; color: #2e7d32; }
+
+    .add-btn { background: var(--accent-green); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+    .add-btn:hover { background: #558b2f; transform: translateY(-2px); }
+    .btn-edit { color: var(--accent-orange); background: #fff3e0; border: none; padding: 8px; border-radius: 6px; cursor: pointer; margin-right: 5px; }
+    .btn-delete { color: #d32f2f; background: #ffebee; border: none; padding: 8px; border-radius: 6px; cursor: pointer; }
+
+    /* --- MODAL --- */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 100; }
+    .modal-content { background: white; width: 550px; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-size: 0.8rem; margin-bottom: 5px; font-weight: 600; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+    .btn-cancel { background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666; }
   </style>
-
 </head>
-
 <body>
 
-<h2>Manage Products</h2>
+<div class="sidebar">
+  <div class="logo-section"><i class="fas fa-leaf"></i> CraftLanka</div>
+  <div class="nav-menu">
+    <a href="seller-dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a href="seller-products.html" class="nav-item active"><i class="fas fa-box"></i> Products</a>
+    <a href="seller-orders.html" class="nav-item"><i class="fas fa-shopping-cart"></i> Orders</a>
+    <a href="seller-profile.html" class="nav-item"><i class="fas fa-user-circle"></i> Profile</a>
+  </div>
+  <div class="user-profile">
+    <img src="https://via.placeholder.com/150" id="sideProfilePic" class="profile-img">
+    <h4 id="displaySellerName">Artisan</h4>
+  </div>
+</div>
 
-<input id="name" placeholder="Product Name">
-<input id="price" placeholder="Price">
+<div class="main-content">
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Manage Inventory</h1>
+      <p id="itemCount" style="font-size: 0.8rem; color: #888;">Loading your catalog...</p>
+    </div>
+    <button class="add-btn" onclick="openModal('add')"><i class="fas fa-plus"></i> Add New Woodcraft</button>
+  </div>
 
-<button onclick="addProduct()">Add</button>
+  <div class="inventory-card">
+    <div id="emptyState" class="empty-state">
+      <i class="fas fa-hammer"></i>
+      <h3>No Masterpieces Yet</h3>
+      <p>Ready to showcase your craft? Start by adding your first product.</p>
+      <button class="add-btn" style="margin: 20px auto;" onclick="openModal('add')">Add My First Item</button>
+    </div>
 
-<table id="table"></table>
+    <table id="productTable">
+      <thead>
+      <tr>
+        <th>Image</th>
+        <th>Product Name</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" id="productModal">
+  <div class="modal-content">
+    <h2 id="modalTitle">Add Woodcraft</h2>
+    <form id="productForm">
+      <input type="hidden" id="editProductId">
+
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" id="pName" required placeholder="e.g. Hand-carved Elephant">
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="pDesc" rows="3" placeholder="Tell the story of this piece..."></textarea>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="form-group">
+          <label>Price (LKR)</label>
+          <input type="number" id="pPrice" required step="0.01">
+        </div>
+        <div class="form-group">
+          <label>Quantity</label>
+          <input type="number" id="pQty" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="text" id="pImg" placeholder="https://example.com/image.jpg">
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="add-btn">Save Product</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <script>
+  const API_URL = "http://localhost:8080/api/v1/products";
+  let products = [];
 
-  function addProduct(){
+  // 1. INITIAL LOAD
+  async function loadProducts() {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch("http://localhost:8080/api/v1/products/my-products", {
+        headers: { "Authorization": "Bearer " + token }
+      });
 
-    let name=document.getElementById("name").value;
-    let price=document.getElementById("price").value;
+      const result = await response.json();
 
-    let row=`<tr><td>${name}</td><td>${price}</td></tr>`;
+      // DEBUG: See exactly what the server sent
+      console.log("Server Response:", result);
 
-    document.getElementById("table").innerHTML+=row;
+      // FIX: Your products are inside result.data
+      if (result.data && Array.isArray(result.data)) {
+        products = result.data;
+      } else {
+        products = [];
+      }
 
+      renderUI();
+    } catch (err) {
+      console.error("Failed to load:", err);
+      products = [];
+      renderUI();
+    }
   }
 
+  // 2. RENDER UI
+  function renderUI() {
+    const table = document.getElementById("productTable");
+    const empty = document.getElementById("emptyState");
+    const body = document.getElementById("tableBody");
+    const countText = document.getElementById("itemCount");
+
+    if (products.length === 0) {
+      empty.style.display = "block";
+      table.style.display = "none";
+      countText.innerText = "0 Products in your catalog";
+    } else {
+      empty.style.display = "none";
+      table.style.display = "table";
+      countText.innerText = `${products.length} Products in your catalog`;
+
+      body.innerHTML = products.map(p => `
+                <tr>
+                    <td><img src="${p.imageUrl}" class="prod-img" onerror="this.src='https://via.placeholder.com/50?text=Wood'"></td>
+                    <td style="font-weight:600;">${p.name}</td>
+                    <td style="font-size: 0.8rem; color: #666;">${p.description ? p.description.substring(0, 30) + '...' : 'No description'}</td>
+                    <td>LKR ${p.price.toLocaleString()}</td>
+                    <td><span class="stock-tag">${p.quantity} Units</span></td>
+                    <td>
+                        <button class="btn-edit" onclick="openModal('edit', ${p.id})"><i class="fas fa-pen"></i></button>
+                        <button class="btn-delete" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+    }
+  }
+
+  // 3. ADD / UPDATE HANDLER
+  document.getElementById('productForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    const editId = document.getElementById("editProductId").value;
+
+    // Construct DTO (Matching your CraftProductDtO)
+    const productData = {
+      name: document.getElementById('pName').value,
+      description: document.getElementById('pDesc').value,
+      price: parseFloat(document.getElementById('pPrice').value),
+      quantity: parseInt(document.getElementById('pQty').value), // Matches DTO field name
+      imageUrl: document.getElementById('pImg').value
+    };
+
+    const url = editId ? `${API_URL}/update/${editId}` : `${API_URL}/add`;
+    const method = editId ? "PUT" : "POST";
+
+    try {
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify(productData)
+      });
+
+      if (response.ok) {
+        alert(editId ? "Masterpiece updated!" : "Masterpiece added successfully!");
+        closeModal();
+        loadProducts();
+      } else {
+        const errorText = await response.text();
+        alert("Failed to save: " + errorText);
+      }
+    } catch (err) {
+      alert("Connection error. Is the backend running?");
+    }
+  };
+
+  // 4. DELETE LOGIC
+  async function deleteProduct(id) {
+    if (!confirm("Are you sure you want to delete this product?")) return;
+
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+        headers: { "Authorization": "Bearer " + token }
+      });
+
+      if (response.ok) {
+        loadProducts();
+      } else {
+        alert("Could not delete the item.");
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+    }
+  }
+
+  // 5. MODAL UTILS
+  function openModal(mode, id = null) {
+    const modal = document.getElementById("productModal");
+    const title = document.getElementById("modalTitle");
+    const form = document.getElementById("productForm");
+
+    form.reset();
+    modal.style.display = "flex";
+
+    if (mode === 'edit') {
+      title.innerText = "Edit Woodcraft";
+      const p = products.find(item => item.id === id);
+      document.getElementById("editProductId").value = p.id;
+      document.getElementById("pName").value = p.name;
+      document.getElementById("pDesc").value = p.description || "";
+      document.getElementById("pPrice").value = p.price;
+      document.getElementById("pQty").value = p.quantity;
+      document.getElementById("pImg").value = p.imageUrl;
+    } else {
+      title.innerText = "Add New Woodcraft";
+      document.getElementById("editProductId").value = "";
+    }
+  }
+
+  function closeModal() {
+    document.getElementById("productModal").style.display = "none";
+  }
+
+  // Close modal if user clicks outside of it
+  window.onclick = function(event) {
+    const modal = document.getElementById("productModal");
+    if (event.target == modal) closeModal();
+  }
+
+  window.onload = loadProducts;
 </script>
 
 </body>

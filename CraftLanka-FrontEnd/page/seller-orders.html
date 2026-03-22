@@ -1,66 +1,227 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Orders</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Management - CraftLanka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-
-    body{
-      font-family:Arial;
-      background:#f7efe5;
-      padding:40px;
+    :root {
+      --sidebar-bg: #5d4037;
+      --main-bg: #f9f3ee;
+      --text-dark: #4e342e;
+      --accent-orange: #e67e22;
+      --accent-green: #689f38;
+      --accent-blue: #4682b4;
+      --card-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    body { background-color: var(--main-bg); display: flex; height: 100vh; overflow: hidden; color: var(--text-dark); }
 
-    th,td{
-      padding:12px;
-      border-bottom:1px solid #ddd;
-    }
+    /* --- SIDEBAR --- */
+    .sidebar { width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; position: relative; background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png'); }
+    .logo-section { padding: 30px 20px; display: flex; align-items: center; gap: 10px; font-size: 1.4rem; font-weight: 600; }
+    .nav-menu { flex-grow: 1; margin-top: 20px; }
+    .nav-item { padding: 15px 25px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.3s; opacity: 0.8; font-size: 0.95rem; text-decoration: none; color: white; }
+    .nav-item.active { background: rgba(255, 255, 255, 0.15); opacity: 1; border-left: 5px solid #d4a373; }
+    .nav-item:hover { background: rgba(255, 255, 255, 0.1); opacity: 1; }
+    .user-profile { padding: 20px; text-align: center; z-index: 2; background: rgba(0,0,0,0.1); }
+    .profile-img { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #fff; object-fit: cover; margin-bottom: 10px; }
 
-    .status{
-      padding:5px 10px;
-      border-radius:5px;
-    }
+    /* --- MAIN CONTENT --- */
+    .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); }
+    .page-header { margin-bottom: 30px; }
+    .page-header h1 { font-size: 1.8rem; }
 
-    .pending{background:orange;color:white;}
-    .shipped{background:green;color:white;}
+    /* --- FILTERS --- */
+    .order-filters { display: flex; gap: 20px; margin-bottom: 25px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+    .filter-tab { padding: 8px 15px; cursor: pointer; font-weight: 500; font-size: 0.9rem; color: #8d6e63; position: relative; transition: 0.3s; }
+    .filter-tab.active { color: var(--accent-orange); }
+    .filter-tab.active::after { content: ""; position: absolute; bottom: -11px; left: 0; width: 100%; height: 3px; background: var(--accent-orange); }
+    .filter-count { background: #eee; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; margin-left: 5px; }
 
+    /* --- TABLE & CARDS --- */
+    .order-card { background: white; border-radius: 15px; padding: 25px; box-shadow: var(--card-shadow); min-height: 400px; }
+    table { width: 100%; border-collapse: collapse; display: none; }
+    th { text-align: left; padding: 15px; border-bottom: 2px solid #f0f0f0; color: #8d6e63; font-size: 0.8rem; text-transform: uppercase; }
+    td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; font-size: 0.9rem; }
+
+    .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+    .status-PENDING { background: #fff3e0; color: #ef6c00; }
+    .status-SHIPPED { background: #e3f2fd; color: #1976d2; }
+    .status-DELIVERED { background: #e8f5e9; color: #2e7d32; }
+
+    .action-select { padding: 6px; border-radius: 5px; border: 1px solid #ddd; font-size: 0.8rem; background: #fafafa; cursor: pointer; }
+
+    /* --- EMPTY STATE --- */
+    .empty-orders { text-align: center; padding: 80px 20px; display: none; }
+    .empty-orders i { font-size: 4rem; color: #d7ccc8; margin-bottom: 20px; }
   </style>
-
 </head>
-
 <body>
 
-<h2>Orders</h2>
+<div class="sidebar">
+  <div class="logo-section"><i class="fas fa-leaf"></i> CraftLanka</div>
+  <div class="nav-menu">
+    <a href="seller-dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+    <a href="seller-products.html" class="nav-item"><i class="fas fa-box"></i> Products</a>
+    <a href="seller-orders.html" class="nav-item active"><i class="fas fa-shopping-cart"></i> Orders</a>
+    <a href="seller-profile.html" class="nav-item"><i class="fas fa-user-circle"></i> Profile</a>
+  </div>
+  <div class="user-profile">
+    <img src="https://i.pravatar.cc/150?u=seller" class="profile-img">
+    <h4 id="sellerDisplayName">Artisan Name</h4>
+  </div>
+</div>
 
-<table>
+<div class="main-content">
+  <div class="page-header">
+    <p style="color: var(--accent-orange); font-weight: 600; font-size: 0.8rem; letter-spacing: 1px;">SALES TRACKING</p>
+    <h1>Customer Orders</h1>
+  </div>
 
-  <tr>
-    <th>ID</th>
-    <th>Customer</th>
-    <th>Total</th>
-    <th>Status</th>
-  </tr>
+  <div class="order-filters" id="statusFilters">
+    <div class="filter-tab active" onclick="filterByStatus('ALL')">All Orders <span class="filter-count" id="count-ALL">0</span></div>
+    <div class="filter-tab" onclick="filterByStatus('PENDING')">Pending <span class="filter-count" id="count-PENDING">0</span></div>
+    <div class="filter-tab" onclick="filterByStatus('SHIPPED')">Shipped <span class="filter-count" id="count-SHIPPED">0</span></div>
+    <div class="filter-tab" onclick="filterByStatus('DELIVERED')">Delivered <span class="filter-count" id="count-DELIVERED">0</span></div>
+  </div>
 
-  <tr>
-    <td>1001</td>
-    <td>Kasun</td>
-    <td>4500</td>
-    <td class="status pending">Pending</td>
-  </tr>
+  <div class="order-card">
+    <div id="emptyOrders" class="empty-orders">
+      <i class="fas fa-box-open"></i>
+      <h3>No Orders Yet</h3>
+      <p>Your shop hasn't received any orders yet. Great things take time!</p>
+    </div>
 
-  <tr>
-    <td>1002</td>
-    <td>Nimal</td>
-    <td>2500</td>
-    <td class="status shipped">Shipped</td>
-  </tr>
+    <table id="ordersTable">
+      <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Product</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody id="ordersBody">
+      </tbody>
+    </table>
+  </div>
+</div>
 
-</table>
+<script>
+  let allOrders = []; // Full list from API
+
+  // 1. FETCH ORDERS
+  async function loadOrders() {
+    const token = localStorage.getItem("token");
+    try {
+      // Replace with your real API endpoint
+      const response = await fetch("http://localhost:8080/api/v1/orders/my-orders", {
+        headers: { "Authorization": "Bearer " + token }
+      });
+      allOrders = await response.json();
+      updateCounts();
+      renderOrders('ALL');
+    } catch (err) {
+      console.error("Order fetch failed:", err);
+      renderOrders('ALL'); // Shows empty state
+    }
+  }
+
+  // 2. UPDATE COUNTS ON TABS
+  function updateCounts() {
+    document.getElementById('count-ALL').innerText = allOrders.length;
+    document.getElementById('count-PENDING').innerText = allOrders.filter(o => o.status === 'PENDING').length;
+    document.getElementById('count-SHIPPED').innerText = allOrders.filter(o => o.status === 'SHIPPED').length;
+    document.getElementById('count-DELIVERED').innerText = allOrders.filter(o => o.status === 'DELIVERED').length;
+  }
+
+  // 3. RENDER ORDERS BASED ON TAB
+  function renderOrders(statusFilter) {
+    const table = document.getElementById("ordersTable");
+    const empty = document.getElementById("emptyOrders");
+    const body = document.getElementById("ordersBody");
+
+    // Update Tab Styling
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.classList.remove('active');
+      if(tab.innerText.toUpperCase().includes(statusFilter)) tab.classList.add('active');
+    });
+
+    // Filter Data
+    const filtered = statusFilter === 'ALL' ? allOrders : allOrders.filter(o => o.status === statusFilter);
+
+    if (filtered.length === 0) {
+      table.style.display = "none";
+      empty.style.display = "block";
+    } else {
+      table.style.display = "table";
+      empty.style.display = "none";
+
+      body.innerHTML = filtered.map(order => `
+              <tr>
+                <td style="font-weight:600; color:var(--accent-blue);">#CL-${order.id}</td>
+                <td>
+                    <div style="font-weight:600;">${order.customerName}</div>
+                    <span style="font-size:0.75rem; color:#999;">${order.city}</span>
+                </td>
+                <td>${order.productName}</td>
+                <td style="font-weight:600;">LKR ${order.total.toLocaleString()}</td>
+                <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                <td>
+                    ${order.status !== 'DELIVERED' ? `
+                        <select class="action-select" onchange="updateStatus(${order.id}, this.value)">
+                            <option disabled selected>Update To...</option>
+                            <option value="SHIPPED">Shipped</option>
+                            <option value="DELIVERED">Delivered</option>
+                        </select>
+                    ` : '<span style="color:var(--accent-green); font-size:0.8rem;"><i class="fas fa-check-circle"></i> Completed</span>'}
+                </td>
+              </tr>
+          `).join('');
+    }
+  }
+
+  // 4. UPDATE STATUS LOGIC
+  async function updateStatus(orderId, newStatus) {
+    const token = localStorage.getItem("token");
+    if(!confirm(`Mark Order #${orderId} as ${newStatus}?`)) return;
+
+    try {
+      // Add your real update API call here
+      /*
+      await fetch(\`http://localhost:8080/api/v1/orders/\${orderId}/status\`, {
+          method: 'PATCH',
+          headers: {
+              "Authorization": "Bearer " + token,
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ status: newStatus })
+      });
+      */
+
+      // Local Update for simulation
+      const order = allOrders.find(o => o.id === orderId);
+      if(order) order.status = newStatus;
+
+      updateCounts();
+      renderOrders('ALL');
+      alert("Order updated successfully!");
+
+    } catch (err) {
+      alert("Failed to update status.");
+    }
+  }
+
+  function filterByStatus(s) { renderOrders(s); }
+
+  window.onload = loadOrders;
+</script>
 
 </body>
 </html>

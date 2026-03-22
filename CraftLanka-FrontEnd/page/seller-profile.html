@@ -1,63 +1,228 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Seller Profile</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Profile - CraftLanka</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-
-        body{
-            font-family:Arial;
-            background:#f7efe5;
-            padding:40px;
+        :root {
+            --sidebar-bg: #5d4037;
+            --main-bg: #f9f3ee;
+            --text-dark: #4e342e;
+            --accent-orange: #e67e22;
+            --accent-green: #689f38;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        .profile{
-            background:white;
-            padding:30px;
-            border-radius:10px;
-            width:400px;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--main-bg); display: flex; height: 100vh; overflow: hidden; color: var(--text-dark); }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; position: relative; background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png'); }
+        .logo-section { padding: 30px 20px; display: flex; align-items: center; gap: 10px; font-size: 1.4rem; font-weight: 600; }
+        .nav-menu { flex-grow: 1; margin-top: 20px; }
+        .nav-item { padding: 15px 25px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.3s; opacity: 0.8; font-size: 0.95rem; text-decoration: none; color: white; }
+        .nav-item.active { background: rgba(255, 255, 255, 0.15); opacity: 1; border-left: 5px solid #d4a373; }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.1); opacity: 1; }
+        .user-profile-side { padding: 20px; text-align: center; z-index: 2; background: rgba(0,0,0,0.1); }
+        .profile-img-small { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; margin-bottom: 10px; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png'); }
+        .profile-container { max-width: 800px; margin: 0 auto; }
+
+        /* --- PROFILE HEADER --- */
+        .profile-header-card {
+            background: white; border-radius: 15px; padding: 30px;
+            box-shadow: var(--card-shadow); display: flex; align-items: center;
+            gap: 25px; margin-bottom: 30px;
+        }
+        .main-profile-pic { position: relative; }
+        .main-profile-pic img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid var(--main-bg); }
+        .edit-pic-btn {
+            position: absolute; bottom: 0; right: 0;
+            background: var(--accent-orange); color: white;
+            width: 30px; height: 30px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; border: 2px solid white; font-size: 0.7rem;
         }
 
-        input{
-            width:100%;
-            padding:10px;
-            margin:10px 0;
-        }
+        .header-info h2 { font-size: 1.5rem; color: var(--sidebar-bg); }
+        .header-info p { color: #8d6e63; font-size: 0.85rem; }
 
-        button{
-            background:#8a4f2d;
-            color:white;
-            border:none;
-            padding:10px;
-        }
+        /* --- FORM --- */
+        .settings-card { background: white; border-radius: 15px; padding: 25px; box-shadow: var(--card-shadow); margin-bottom: 20px; }
+        .settings-card h3 { font-size: 1rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; color: var(--sidebar-bg); }
 
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .full-width { grid-column: span 2; }
+        .form-group label { display: block; font-size: 0.8rem; margin-bottom: 5px; font-weight: 600; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem;
+        }
+        .form-group input:focus { border-color: var(--accent-orange); outline: none; }
+
+        .btn-save { background: var(--sidebar-bg); color: white; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.3s; }
+        .btn-save:hover { background: #3e2723; transform: translateY(-2px); }
     </style>
-
 </head>
-
 <body>
 
-<div class="profile">
+<div class="sidebar">
+    <div class="logo-section"><i class="fas fa-leaf"></i> CraftLanka</div>
+    <div class="nav-menu">
+        <a href="seller-dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+        <a href="seller-products.html" class="nav-item"><i class="fas fa-box"></i> Products</a>
+        <a href="seller-orders.html" class="nav-item"><i class="fas fa-shopping-cart"></i> Orders</a>
+        <a href="seller-profile.html" class="nav-item active"><i class="fas fa-user-circle"></i> Profile</a>
+    </div>
+    <div class="user-profile-side">
+        <img src="https://via.placeholder.com/150" id="sideProfileImg" class="profile-img-small">
+        <h4 id="sideShopName">Loading...</h4>
+    </div>
+</div>
 
-    <h2>Seller Profile</h2>
+<div class="main-content">
+    <div class="profile-container">
+        <div class="page-header" style="margin-bottom: 20px;">
+            <p style="color: var(--accent-orange); font-weight: 600; font-size: 0.75rem;">ACCOUNT SETTINGS</p>
+            <h1>Store Profile</h1>
+        </div>
 
-    <input placeholder="Store Name">
+        <div class="profile-header-card">
+            <div class="main-profile-pic">
+                <img src="https://via.placeholder.com/150" id="headerProfileImg">
+                <label for="picUpload" class="edit-pic-btn"><i class="fas fa-camera"></i></label>
+                <input type="file" id="picUpload" style="display: none;" accept="image/*">
+            </div>
+            <div class="header-info">
+                <h2 id="headerShopName">Shop Name</h2>
+                <p id="headerEmail">email@craftlanka.com</p>
+                <p id="headerLocation"><i class="fas fa-map-marker-alt"></i> Sri Lanka</p>
+            </div>
+        </div>
 
-    <input placeholder="Contact Email">
+        <form id="profileForm">
+            <div class="settings-card">
+                <h3><i class="fas fa-store"></i> Shop Details</h3>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>Shop Name / Business Name</label>
+                        <input type="text" id="shopName" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Shop Description</label>
+                        <textarea id="shopDesc" rows="3" placeholder="Tell customers about your craftsmanship..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Owner Full Name</label>
+                        <input type="text" id="fullName">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="text" id="phone">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Business Address</label>
+                        <input type="text" id="address">
+                    </div>
+                </div>
+            </div>
 
-    <textarea placeholder="Store Description"></textarea>
+            <div class="settings-card">
+                <h3><i class="fas fa-lock"></i> Security</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>New Password (leave blank to keep current)</label>
+                        <input type="password" id="newPassword" placeholder="********">
+                    </div>
+                </div>
+            </div>
 
-    <button onclick="save()">Save</button>
-
+            <button type="submit" class="btn-save">Update Profile</button>
+        </form>
+    </div>
 </div>
 
 <script>
+    const token = localStorage.getItem("token");
 
-    function save(){
-        alert("Profile updated");
+    // 1. FETCH PROFILE DATA
+    async function fetchProfile() {
+        try {
+            // Replace with your real API endpoint for user profile
+            const response = await fetch("http://localhost:8080/api/v1/users/profile", {
+                headers: { "Authorization": "Bearer " + token }
+            });
+            const user = await response.json();
+
+            // Populate Form
+            document.getElementById('shopName').value = user.shopName || "";
+            document.getElementById('shopDesc').value = user.description || "";
+            document.getElementById('fullName').value = user.name || "";
+            document.getElementById('phone').value = user.phone || "";
+            document.getElementById('address').value = user.address || "";
+
+            // Update Headers
+            document.getElementById('headerShopName').innerText = user.shopName || "My Shop";
+            document.getElementById('sideShopName').innerText = user.shopName || "My Shop";
+            document.getElementById('headerEmail').innerText = user.email;
+
+            if(user.profilePic) {
+                document.getElementById('headerProfileImg').src = user.profilePic;
+                document.getElementById('sideProfileImg').src = user.profilePic;
+            }
+
+        } catch (err) {
+            console.error("Error fetching profile:", err);
+        }
     }
 
-</script>
+    // 2. UPDATE PROFILE DATA
+    document.getElementById('profileForm').onsubmit = async (e) => {
+        e.preventDefault();
 
+        const updatedData = {
+            shopName: document.getElementById('shopName').value,
+            description: document.getElementById('shopDesc').value,
+            name: document.getElementById('fullName').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value
+        };
+
+        const newPass = document.getElementById('newPassword').value;
+        if(newPass) updatedData.password = newPass;
+
+        try {
+            const response = await fetch("http://localhost:8080/api/v1/users/profile/update", {
+                method: "PUT",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(updatedData)
+            });
+
+            if(response.ok) {
+                alert("Profile updated successfully! 🪵");
+                fetchProfile(); // Refresh UI
+            }
+        } catch (err) {
+            alert("Update failed. Please try again.");
+        }
+    };
+
+    // Image Preview
+    document.getElementById('picUpload').onchange = function (evt) {
+        const [file] = evt.target.files;
+        if (file) {
+            document.getElementById('headerProfileImg').src = URL.createObjectURL(file);
+        }
+    }
+
+    window.onload = fetchProfile;
+</script>
 </body>
 </html>

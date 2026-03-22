@@ -14,7 +14,7 @@ public interface CraftProductService {
 
     CraftProduct updateProduct(Long id, CraftProductDtO craftProductDtO);
 
-    void deleteProduct(CraftProductDtO craftProductDtO);
+    void deleteProductById(Long id);
 
     List<CraftProductDtO> getAllProducts();
 }
