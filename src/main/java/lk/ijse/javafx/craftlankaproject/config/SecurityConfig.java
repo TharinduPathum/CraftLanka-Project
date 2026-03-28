@@ -34,21 +34,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // 1. Enable CORS with our custom configuration
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/v1/auth/**").permitAll()
-                                // Allows browsers to perform the "pre-flight" check without a token
-                                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                                .anyRequest().authenticated())
-                .sessionManagement(
-                        session ->
-                                session.sessionCreationPolicy(
-                                        SessionCreationPolicy.STATELESS))
+                // SecurityConfig.java inside filterChain
+
+                .authorizeHttpRequests(auth -> auth
+                        // Allow anyone to access the NEW customer endpoint
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/customer/**").permitAll()
+
+                        // Auth paths
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+
+                        .requestMatchers("/api/v1/payment/**").permitAll()
+
+                        // Everything else (Seller actions) stays private
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter,
-                        UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

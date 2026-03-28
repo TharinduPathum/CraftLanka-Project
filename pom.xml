@@ -108,6 +108,12 @@
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>lk.payhere</groupId>-->
+<!--            <artifactId>payhere-sdk</artifactId>-->
+<!--            <version>1.0.1</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

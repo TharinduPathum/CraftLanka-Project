@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - CraftLanka</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .success-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            margin: 0 auto 20px;
+            animation: scaleUp 0.5s ease-out;
+        }
+
+        h1 { color: #333; margin-bottom: 10px; }
+        p { color: #666; line-height: 1.6; margin-bottom: 30px; }
+
+        .order-id {
+            font-weight: bold;
+            color: #28a745;
+            background: #e8f5e9;
+            padding: 5px 15px;
+            border-radius: 5px;
+        }
+
+        .btn-home {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #8B4513; /* Wooden Brown for CraftLanka */
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-home:hover {
+            background-color: #5D2E0A;
+            transform: translateY(-2px);
+        }
+
+        @keyframes scaleUp {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="success-card">
+    <div class="icon-circle">
+        <i class="fas fa-check"></i>
+    </div>
+    <h1>Payment Received!</h1>
+    <p>Thank you for supporting Sri Lankan handicrafts. Your order has been placed successfully.</p>
+
+    <p>Transaction ID: <span id="displayOrderId" class="order-id">Loading...</span></p>
+
+    <a href="products.html" class="btn-home">Back to Shop</a>
+</div>
+
+<script>
+    // 1. Clear the cart immediately just in case
+    localStorage.removeItem("cart");
+
+    // 2. Get the Order ID from the URL (PayHere appends it)
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get('order_id') || "CL-" + Math.floor(Math.random() * 10000);
+
+    document.getElementById("displayOrderId").innerText = orderId;
+
+    console.log("Checkout complete for Order: " + orderId);
+</script>
+</body>
+</html>

@@ -121,7 +121,7 @@
     <a href="../index.html">Home</a>
     <a href="#" class="active">Collection</a>
     <a href="./seller.html">Artisans</a>
-    <a href="./login.html">Login</a>
+<!--    <a href="./login.html">Login</a>-->
     <a href="./cart.html" class="cart-icon">
       <i class="fas fa-shopping-basket"></i>
       <span class="cart-count">0</span>
@@ -150,76 +150,112 @@
 </footer>
 
 <script>
-  const products = [
-    {
-      id: 1,
-      name: "Traditional Kaduru Mask",
-      wood: "Kaduru Wood",
-      price: 3200,
-      image: "https://images.unsplash.com/photo-1616628182505-6c3f3c9a2e2e?w=500",
-      sellerName: "Ruwan Handicrafts"
-    },
-    {
-      id: 2,
-      name: "Royal Ebony Elephant",
-      wood: "Ebony",
-      price: 8500,
-      image: "https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?w=500",
-      sellerName: "Lakshan Carvings"
-    },
-    {
-      id: 3,
-      name: "Teak Meditating Buddha",
-      wood: "Teak",
-      price: 12500,
-      image: "https://images.unsplash.com/photo-1592928302636-c83cf1cdbec3?w=500",
-      sellerName: "Heritage Wood Art"
-    },
-    {
-      id: 4,
-      name: "Mahogany Fruit Bowl",
-      wood: "Mahogany",
-      price: 3500,
-      image: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=500",
-      sellerName: "Nimal Wood Crafts"
-    }
-  ];
+  const API_URL = "http://localhost:8080/api/v1/customer";
+  let products = []; // This must stay at the top!
 
+  // 1. FETCH DATA FROM BACKEND
+  async function fetchProducts() {
+    try {
+      const response = await fetch(`${API_URL}/products`);
+      const result = await response.json();
+
+      if (response.ok) {
+        products = result.data || [];
+        renderProducts();
+      } else {
+        showEmptyState("Could not load the collection.");
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      showEmptyState("Server connection failed.");
+    }
+  }
+
+  // 2. RENDER PRODUCTS TO UI
   function renderProducts() {
     const grid = document.getElementById('productGrid');
-    grid.innerHTML = products.map(p => `
-            <div class="product-card">
-                <div class="img-container">
-                    <img src="${p.image}" alt="${p.name}">
-                    <div class="wishlist-heart"><i class="far fa-heart"></i></div>
-                </div>
-                <div class="details">
-                    <span class="wood-tag">${p.wood}</span>
-                    <h3>${p.name}</h3>
-                    <p class="seller-link">By <span>${p.sellerName}</span></p>
-                    <div class="bottom-row">
-                        <p class="price">LKR ${p.price.toLocaleString()}</p>
-                        <button class="add-btn" onclick="addToCart(${p.id})">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-  }
 
-  function addToCart(id) {
-    let user = localStorage.getItem("user");
-    if(!user) {
-      alert("Please login as a customer to purchase items.");
-      window.location.href="login.html";
+    if (!products || products.length === 0) {
+      showEmptyState();
       return;
     }
-    alert("Added to your basket!");
+
+    grid.innerHTML = products.map(p => `
+      <div class="product-card">
+          <div class="img-container">
+              <img src="${p.imageUrl}" alt="${p.name}"
+                   onerror="this.src='https://placehold.co/500x400?text=Premium+Woodcraft'">
+              <div class="wishlist-heart"><i class="far fa-heart"></i></div>
+          </div>
+          <div class="details">
+              <span class="wood-tag">Sri Lankan Wood</span>
+              <h3>${p.name}</h3>
+              <p class="seller-link" style="font-size: 0.75rem; color: #777; margin-bottom: 10px;">
+                  ${p.description ? p.description.substring(0, 60) + '...' : 'Handcrafted masterpiece.'}
+              </p>
+              <div class="bottom-row">
+                  <p class="price">LKR ${p.price.toLocaleString()}</p>
+                  <button class="add-btn" onclick="addToCart(${p.id})">
+                      <i class="fas fa-plus"></i>
+                  </button>
+              </div>
+          </div>
+      </div>
+    `).join('');
   }
 
-  // Initialize
-  renderProducts();
+  function showEmptyState(msg = "No masterpieces found in the collection yet.") {
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = `
+      <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
+        <i class="fas fa-box-open" style="font-size: 3rem; color: #ddd; margin-bottom: 20px;"></i>
+        <p>${msg}</p>
+      </div>
+    `;
+  }
+
+  // 3. THE NEW ADD TO CART LOGIC
+  async function addToCart(id) {
+    const token = localStorage.getItem("token");
+
+    // Check Login
+    if (!token) {
+      alert("Please login to add items to your basket.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    // Find the product details from our local array
+    const productToAdd = products.find(p => p.id === id);
+
+    try {
+      // Update Database (Reduce Quantity)
+      const response = await fetch(`${API_URL}/products/${id}/reduce`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        // Save to LocalStorage Cart
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        cart.push(productToAdd);
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        // Navigate to Cart Page
+        window.location.href = "cart.html";
+      } else {
+        alert("This item is out of stock!");
+      }
+    } catch (error) {
+      console.error("Cart Error:", error);
+      alert("Connection error. Is the server running?");
+    }
+  }
+
+  // 4. INITIALIZE
+  window.onload = fetchProducts;
 </script>
 
 </body>

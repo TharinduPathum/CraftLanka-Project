@@ -1,6 +1,7 @@
 package lk.ijse.javafx.craftlankaproject.service.impl;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.transaction.Transactional;
 import lk.ijse.javafx.craftlankaproject.dto.CraftProductDtO;
 import lk.ijse.javafx.craftlankaproject.entity.CraftProduct;
 import lk.ijse.javafx.craftlankaproject.repository.CraftProductRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CraftProductServiceImpl implements CraftProductService {
@@ -70,24 +72,33 @@ public class CraftProductServiceImpl implements CraftProductService {
 
     @Override
     public List<CraftProductDtO> getAllProducts() {
+        // 1. Repository.findAll() is already built-in to JpaRepository!
+        List<CraftProduct> products = craftProductRepository.findAll();
 
-        List<CraftProductDtO> productDTOList = new ArrayList<>();
+        // 2. We convert them to DTOs manually to avoid 500 errors
+        return products.stream().map(product -> {
+            CraftProductDtO dto = new CraftProductDtO();
+            dto.setId(product.getId());
+            dto.setName(product.getName());
+            dto.setDescription(product.getDescription());
+            dto.setPrice(product.getPrice());
+            dto.setImageUrl(product.getImageUrl());
+            dto.setQuantity(product.getQuantity());
+            return dto;
+        }).collect(Collectors.toList());
+    }
 
-        List<CraftProduct> productList = craftProductRepository.findAll();
+    @Override
+    @Transactional // Important! This ensures the update is saved
+    public void decrementQuantity(Long productId) {
+        CraftProduct product = craftProductRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        for (int i = 0; i < productList.size(); i++) {
-
-            CraftProductDtO dto =
-                    modelMapper.map(productList.get(i), CraftProductDtO.class);
-
-            productDTOList.add(dto);
+        if (product.getQuantity() > 0) {
+            product.setQuantity(product.getQuantity() - 1);
+            craftProductRepository.save(product);
+        } else {
+            throw new RuntimeException("Out of stock!");
         }
-
-        if (productDTOList.isEmpty()) {
-
-            throw new NullPointerException("Products are not available yet");
-        }
-
-        return productDTOList;
     }
 }

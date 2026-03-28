@@ -17,4 +17,8 @@ public interface CraftProductService {
     void deleteProductById(Long id);
 
     List<CraftProductDtO> getAllProducts();
+
+    void decrementQuantity(Long productId);
+
+
 }

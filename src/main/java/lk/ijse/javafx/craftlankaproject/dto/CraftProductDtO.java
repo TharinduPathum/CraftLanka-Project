@@ -14,4 +14,5 @@ public class CraftProductDtO {
     private double price;
     private int quantity;
     private String imageUrl;
+
 }

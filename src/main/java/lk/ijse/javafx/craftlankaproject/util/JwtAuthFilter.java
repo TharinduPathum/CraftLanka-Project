@@ -30,10 +30,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // 1. Check if the header is valid
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
+            filterChain.doFilter(request, response); // PASS THE BALL
+            return; // EXIT IMMEDIATELY
         }
-
         jwtToken = authHeader.substring(7);
         username = jwtUtil.extractUsername(jwtToken);
 
