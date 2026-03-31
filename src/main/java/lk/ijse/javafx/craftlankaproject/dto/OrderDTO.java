@@ -1,16 +1,19 @@
 package lk.ijse.javafx.craftlankaproject.dto;
 
-import lk.ijse.javafx.craftlankaproject.entity.OrderStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+import java.math.BigDecimal;
+
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class OrderDTO {
-
     private Long id;
-    private double totalAmount;
-    private OrderStatus status;
+    private String customerEmail;
+    private String items;
+    private BigDecimal totalAmount;
+    private String status;
+    private String payherePaymentId;
 }

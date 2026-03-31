@@ -1,15 +1,24 @@
 package lk.ijse.javafx.craftlankaproject.Controller;
 
 import lk.ijse.javafx.craftlankaproject.dto.OrderDTO;
-import org.springframework.beans.factory.annotation.Value; // ADD THIS
+import lk.ijse.javafx.craftlankaproject.entity.Order;
+import lk.ijse.javafx.craftlankaproject.entity.OrderStatus;
+import lk.ijse.javafx.craftlankaproject.entity.Payment;
+import lk.ijse.javafx.craftlankaproject.entity.PaymentStatus;
+import lk.ijse.javafx.craftlankaproject.repository.OrderRepository;
+import lk.ijse.javafx.craftlankaproject.repository.PaymentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +26,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/payment")
 public class PaymentController {
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     @Value("${payhere.merchant.id}")
     private String merchantId;
@@ -28,7 +43,7 @@ public class PaymentController {
     public ResponseEntity<Map<String, Object>> generatePaymentData(@RequestBody OrderDTO orderDto) {
         // 1. Generate a unique Order ID
         String orderId = "ORDER_" + System.currentTimeMillis();
-        double amount = orderDto.getTotalAmount();
+        double amount = orderDto.getTotalAmount().doubleValue();
         String currency = "LKR";
 
         // 2. Create the MD5 Hash (Security Requirement)
@@ -86,7 +101,28 @@ public class PaymentController {
 
         System.out.println("Payment received for Order: " + orderId);
 
+        System.out.println(">>> [STEP 1] PayHere request arrived! Order: " + orderId + " | Status: " + statusCode);
+
         if ("2".equals(statusCode)) {
+            System.out.println(">>> [STEP 2] Status is '2'. Processing success...");
+            Long id = Long.parseLong(orderId.replace("ORDER_", ""));
+            System.out.println(">>> [STEP 3] Parsed ID: " + id);
+            Order order = orderRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Order not found"));
+            System.out.println(">>> [STEP 4] Order found in DB: " + order.getId());
+            order.setStatus(OrderStatus.PLACED); // Change from PENDING to PAID
+            orderRepository.save(order);
+            System.out.println(">>> [STEP 5] Order saved successfully!");
+            Payment payment = new Payment();
+           // payment.setAmount(Double.parseDouble(amount)); // Convert PayHere String to double
+            payment.setPaymentMethod("CARD");              // Or "PayHere"
+           // payment.setPayherePaymentId(payment_id);       // This is the 'payment_id' from PayHere params
+            payment.setStatus(PaymentStatus.COMPLETED);    // Using your Enum
+            payment.setPaymentDate(LocalDateTime.now());
+            payment.setOrder(order);
+
+            paymentRepository.save(payment);
+            System.out.println(">>> [STEP 6] Payment record saved successfully!");
             // 2. THIS IS WHERE THE MAGIC HAPPENS
             // Logic to:
             // - Change Order Status to 'PAID'

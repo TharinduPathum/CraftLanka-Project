@@ -1,38 +1,47 @@
 package lk.ijse.javafx.craftlankaproject.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "orders")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Table(name = "orders")
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private double totalAmount;
-
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
-
-    private LocalDateTime orderDate;
-
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "user_id")
     private User customer;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems;
+    @Column(name = "email", nullable = false)
+    private String customerEmail;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    private Payment payment;
+    @Column(columnDefinition = "TEXT")
+    private String items;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal amount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private OrderStatus status;
+
+    @Column(name = "payhere_payment_id", length = 100)
+    private String payherePaymentId;
+
+    @CreationTimestamp
+    @Column(name = "order_date", updatable = false)
+    private Timestamp orderDate;
 }

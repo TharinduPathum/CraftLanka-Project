@@ -4,6 +4,7 @@ import lk.ijse.javafx.craftlankaproject.util.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -41,11 +42,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Allow anyone to access the NEW customer endpoint
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/customer/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/v1/orders/payment-notification").permitAll()
 
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/products/update/**").permitAll()
                         // Auth paths
                         .requestMatchers("/api/v1/auth/**").permitAll()
 
                         .requestMatchers("/api/v1/payment/**").permitAll()
+
+                        .requestMatchers("/api/v1/index/**").permitAll()
 
                         // Everything else (Seller actions) stays private
                         .anyRequest().authenticated()

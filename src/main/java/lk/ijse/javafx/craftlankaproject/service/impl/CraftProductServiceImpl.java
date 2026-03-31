@@ -45,21 +45,22 @@ public class CraftProductServiceImpl implements CraftProductService {
     }
 
     @Override
+    @Transactional // Always use this for updates!
     public CraftProduct updateProduct(Long id, CraftProductDtO craftProductDtO) {
+        // 1. Find the existing product
+        CraftProduct existingProduct = craftProductRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
 
-        Optional<CraftProduct> productOptional = craftProductRepository.findById(id);
+        // 2. Map the DTO data INTO the existing entity (Manual or ModelMapper)
+        // This preserves the Seller and any other fields not in the DTO
+        existingProduct.setName(craftProductDtO.getName());
+        existingProduct.setDescription(craftProductDtO.getDescription());
+        existingProduct.setPrice(craftProductDtO.getPrice());
+        existingProduct.setQuantity(craftProductDtO.getQuantity());
+        // Add other fields like category or image URL here
 
-        if (productOptional.isPresent()) {
-
-            CraftProduct product = modelMapper.map(craftProductDtO, CraftProduct.class);
-            product.setId(id);
-
-            return craftProductRepository.save(product);
-
-        } else {
-
-            throw new NullPointerException("Product not available");
-        }
+        // 3. Save the updated entity
+        return craftProductRepository.save(existingProduct);
     }
 
     public void deleteProductById(Long id) {

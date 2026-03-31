@@ -43,6 +43,26 @@
     .page-intro { text-align: center; padding: 60px 20px 40px; }
     .page-intro h1 { font-size: 2.2rem; color: var(--primary-brown); margin-bottom: 10px; }
 
+    nav {
+      display: flex;
+      gap: 30px; /* Increased gap for better spacing */
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--text-dark);
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: var(--accent-orange);
+    }
+
     .filter-container {
       display: flex;
       justify-content: center;
@@ -121,11 +141,19 @@
     <a href="../index.html">Home</a>
     <a href="#" class="active">Collection</a>
     <a href="./seller.html">Artisans</a>
+
+    <span id="authLink"></span>
+
 <!--    <a href="./login.html">Login</a>-->
     <a href="./cart.html" class="cart-icon">
       <i class="fas fa-shopping-basket"></i>
       <span class="cart-count">0</span>
     </a>
+
+    <a href="./customer-orders.html" id="activitiesBtn" >
+      <i class="fas fa-history"></i> Activities
+    </a>
+
   </nav>
 </header>
 
@@ -254,8 +282,41 @@
     }
   }
 
+  function updateAuthUI() {
+    const token = localStorage.getItem("token");
+    const authLink = document.getElementById("authLink");
+
+    if (token) {
+      // If logged in, show Logout button
+      authLink.innerHTML = `
+      <a href="javascript:void(0)" onclick="logout()" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>`;
+    } else {
+      // If not logged in, show Login link
+      authLink.innerHTML = `<a href="./login.html">Login</a>`;
+    }
+  }
+
+  // 2. The Logout Function
+  function logout() {
+    // Clear the security token
+    localStorage.removeItem("token");
+
+    // Optional: Clear user-specific data but maybe keep the cart?
+    // localStorage.removeItem("userEmail");
+
+    localStorage.removeItem("cart_items");
+
+    alert("You have been logged out. See you soon, artisan!");
+
+    // Redirect to home page
+    window.location.href = "../index.html";
+  }
+
   // 4. INITIALIZE
   window.onload = fetchProducts;
+  updateAuthUI(); // Check login status on load
 </script>
 
 </body>

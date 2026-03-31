@@ -21,7 +21,10 @@ public class Payment {
 
     private String paymentMethod;
 
+    private String payherePaymentId;
+
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private PaymentStatus status;
 
     private LocalDateTime paymentDate;

@@ -3,6 +3,7 @@ package lk.ijse.javafx.craftlankaproject.Controller;
 import jakarta.validation.Valid;
 import lk.ijse.javafx.craftlankaproject.dto.CraftProductDtO;
 import lk.ijse.javafx.craftlankaproject.dto.APIResponse;
+import lk.ijse.javafx.craftlankaproject.entity.CraftProduct;
 import lk.ijse.javafx.craftlankaproject.service.impl.CraftProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,14 +31,14 @@ public class CraftProductController {
     }
 
 
-    @PutMapping("/{id}")
-    public void updateProduct(
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CraftProduct> updateProduct(
             @PathVariable Long id,
             @RequestBody CraftProductDtO craftProductDtO) {
 
-        craftProductServiceImpl.updateProduct(id, craftProductDtO);
+        CraftProduct updatedProduct = craftProductServiceImpl.updateProduct(id, craftProductDtO);
+        return ResponseEntity.ok(updatedProduct);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<APIResponse> deleteProduct(@PathVariable CraftProductDtO id) {
 

@@ -247,6 +247,49 @@
             padding-top: 20px;
         }
 
+        /* --- PRODUCT GRID --- */
+        .grid {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+
+        .img-container { position: relative; height: 220px; overflow: hidden; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .product-card:hover .img-container img { transform: scale(1.1); }
+
+        .add-btn {
+            background: var(--primary-brown); color: white; border: none;
+            width: 40px; height: 40px; border-radius: 10px;
+            cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;
+        }
+        .add-btn:hover { background: var(--accent-orange); transform: rotate(90deg); }
+
+        .details { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .wood-tag { font-size: 0.7rem; text-transform: uppercase; color: var(--accent-orange); font-weight: 600; letter-spacing: 1px; margin-bottom: 5px; }
+        .details h3 { font-size: 1.1rem; color: var(--primary-brown); margin-bottom: 8px; }
+
+        .seller-link { font-size: 0.8rem; color: #888; margin-bottom: 15px; }
+        .seller-link span { color: var(--primary-brown); font-weight: 600; cursor: pointer; text-decoration: underline; }
+
+        .bottom-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .price { font-size: 1.2rem; font-weight: 600; color: var(--text-dark); }
+
+
     </style>
 </head>
 <body>
@@ -275,73 +318,10 @@
         <div class="divider"></div>
     </div>
 
-    <section class="products-grid">
-        <div class="card" onclick="location.href='./page/products.html'">
-            <div class="card-img">
-                <img src="" alt="Wooden Elephant">
-            </div>
-            <div class="card-content">
-                <span class="wood-type">Ebony Wood</span>
-                <h3>Traditional Hand-Carved Elephant</h3>
-                <p class="price">LKR 8,500</p>
-            </div>
-        </div>
+    <div class="grid" id="productGrid">
+    </div>
 
-        <div class="card" onclick="location.href='./page/products.html'">
-            <div class="card-img">
-                <img src="https://images.unsplash.com/photo-1616628182505-6c3f3c9a2e2e?w=500" alt="Wood Carving Mask">
-            </div>
-            <div class="card-content">
-                <span class="wood-type">Kaduru Wood</span>
-                <h3>Gara Yaka Ritual Mask</h3>
-                <p class="price">LKR 4,200</p>
-            </div>
-        </div>
 
-        <div class="card" onclick="location.href='./page/products.html'">
-            <div class="card-img">
-                <img src="https://images.unsplash.com/photo-1592928302636-c83cf1cdbec3?w=500" alt="Hand Carved Statue">
-            </div>
-            <div class="card-content">
-                <span class="wood-type">Teak</span>
-                <h3>Meditating Buddha Statue</h3>
-                <p class="price">LKR 12,500</p>
-            </div>
-        </div>
-
-        <div class="card" onclick="location.href='./page/products.html'">
-            <div class="card-img">
-                <img src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=500" alt="Decorative Wood Art">
-            </div>
-            <div class="card-content">
-                <span class="wood-type">Mahogany</span>
-                <h3>Ancient Wall Panel Art</h3>
-                <p class="price">LKR 15,000</p>
-            </div>
-        </div>
-
-        <div class="card" onclick="location.href='./page/products.html'">
-            <div class="card-img">
-                <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=500" alt="Table Decor">
-            </div>
-            <div class="card-content">
-                <span class="wood-type">Satinwood</span>
-                <h3>Traditional Jewelry Box</h3>
-                <p class="price">LKR 3,800</p>
-            </div>
-        </div>
-
-        <div class="card" onclick="location.href='./page/products.html'">
-            <div class="card-img">
-                <img src="https://images.unsplash.com/photo-1581783898377-1c85bf937427?w=500" alt="Ornament">
-            </div>
-            <div class="card-content">
-                <span class="wood-type">Mixed Wood</span>
-                <h3>Fisherman Figurine</h3>
-                <p class="price">LKR 2,900</p>
-            </div>
-        </div>
-    </section>
 </div>
 
 <footer>
@@ -356,6 +336,76 @@
         © 2026 CraftLanka | Purely Sri Lankan Handmade Wooden Crafts
     </div>
 </footer>
+
+<script>
+const API_URL = "http://localhost:8080/api/v1/index";
+let products = []; // This must stay at the top!
+
+// 1. FETCH DATA FROM BACKEND
+async function fetchProducts() {
+try {
+const response = await fetch(`${API_URL}/products`);
+const result = await response.json();
+
+if (response.ok) {
+products = result.data || [];
+renderProducts();
+} else {
+showEmptyState("Could not load the collection.");
+}
+} catch (error) {
+console.error("Fetch error:", error);
+showEmptyState("Server connection failed.");
+}
+}
+
+// 2. RENDER PRODUCTS TO UI
+function renderProducts() {
+const grid = document.getElementById('productGrid');
+
+if (!products || products.length === 0) {
+showEmptyState();
+return;
+}
+
+grid.innerHTML = products.map(p => `
+<div class="product-card">
+    <div class="img-container">
+        <img src="${p.imageUrl}" alt="${p.name}"
+             onerror="this.src='https://placehold.co/500x400?text=Premium+Woodcraft'">
+        <div class="wishlist-heart"><i class="far fa-heart"></i></div>
+    </div>
+    <div class="details">
+        <span class="wood-tag">Sri Lankan Wood</span>
+        <h3>${p.name}</h3>
+        <p class="seller-link" style="font-size: 0.75rem; color: #777; margin-bottom: 10px;">
+            ${p.description ? p.description.substring(0, 60) + '...' : 'Handcrafted masterpiece.'}
+        </p>
+        <div class="bottom-row">
+            <p class="price">LKR ${p.price.toLocaleString()}</p>
+            <button class="add-btn" onclick="window.location.href='./page/login.html'">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+</div>
+`).join('');
+}
+
+function showEmptyState(msg = "No masterpieces found in the collection yet.") {
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = `
+      <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
+        <i class="fas fa-box-open" style="font-size: 3rem; color: #ddd; margin-bottom: 20px;"></i>
+        <p>${msg}</p>
+      </div>
+    `;
+}
+
+window.onload = fetchProducts;
+
+
+</script>
 
 </body>
 </html>

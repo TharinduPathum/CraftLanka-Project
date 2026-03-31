@@ -65,6 +65,17 @@
     .btn-delete { background: #ffebee; color: #c62828; }
     .btn-icon:hover { transform: scale(1.1); }
 
+    /* Styling for the Logout button specifically */
+    .logout-item {
+      margin-top: 50px; /* Pushes it down away from the main links */
+      color: #ffab91 !important; /* Soft orange/red to indicate "Exit" */
+    }
+
+    .logout-item:hover {
+      background: rgba(211, 47, 47, 0.2) !important; /* Reddish hover effect */
+      color: #ff8a65 !important;
+    }
+
     /* --- EMPTY STATE --- */
     .empty-state { text-align: center; padding: 80px 0; }
     .empty-state i { font-size: 4rem; color: #d7ccc8; margin-bottom: 20px; }
@@ -79,6 +90,10 @@
     <a href="./seller-products.html" class="nav-item"><i class="fas fa-box"></i> Products</a>
     <a href="./seller-orders.html" class="nav-item"><i class="fas fa-shopping-cart"></i> Orders</a>
     <a href="./seller-profile.html" class="nav-item"><i class="fas fa-user-circle"></i> Account</a>
+
+    <a href="javascript:void(0)" onclick="logout()" class="nav-item logout-item">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
   </div>
 </div>
 
@@ -140,6 +155,12 @@
 <script>
   async function loadProducts() {
     const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "login.html";
+      return;
+    }
+
     const table = document.getElementById("productTable");
     const body = document.getElementById("tableBody");
     const empty = document.getElementById("emptyState");
@@ -191,6 +212,19 @@
 
   function goToAddProduct() {
     window.location.href = "./add-product.html";
+  }
+
+  function logout() {
+    // 1. Remove the seller's security token
+    localStorage.removeItem("token");
+
+    // 2. Clear any other session data (optional)
+    // localStorage.removeItem("sellerName");
+
+    alert("Logging out of CraftLanka Seller Portal...");
+
+    // 3. Redirect back to login or homepage
+    window.location.href = "../index.html";
   }
 
   window.onload = loadProducts;
