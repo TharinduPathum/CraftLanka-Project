@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -16,4 +17,6 @@ public class OrderDTO {
     private BigDecimal totalAmount;
     private String status;
     private String payherePaymentId;
+    private Timestamp orderDate;
+    private Long userId;
 }

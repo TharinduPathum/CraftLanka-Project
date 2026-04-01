@@ -30,6 +30,6 @@ public class Payment {
     private LocalDateTime paymentDate;
 
     @OneToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id",referencedColumnName = "id")
     private Order order;
 }

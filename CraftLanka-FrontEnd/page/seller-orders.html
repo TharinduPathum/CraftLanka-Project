@@ -163,27 +163,30 @@
       table.style.display = "table";
       empty.style.display = "none";
 
+
       body.innerHTML = filtered.map(order => `
-              <tr>
-                <td style="font-weight:600; color:var(--accent-blue);">#CL-${order.id}</td>
-                <td>
-                    <div style="font-weight:600;">${order.customerName}</div>
-                    <span style="font-size:0.75rem; color:#999;">${order.city}</span>
-                </td>
-                <td>${order.productName}</td>
-                <td style="font-weight:600;">LKR ${order.total.toLocaleString()}</td>
-                <td><span class="status-badge status-${order.status}">${order.status}</span></td>
-                <td>
-                    ${order.status !== 'DELIVERED' ? `
-                        <select class="action-select" onchange="updateStatus(${order.id}, this.value)">
-                            <option disabled selected>Update To...</option>
-                            <option value="SHIPPED">Shipped</option>
-                            <option value="DELIVERED">Delivered</option>
-                        </select>
-                    ` : '<span style="color:var(--accent-green); font-size:0.8rem;"><i class="fas fa-check-circle"></i> Completed</span>'}
-                </td>
-              </tr>
-          `).join('');
+  <tr>
+    <td style="font-weight:600; color:var(--accent-blue);">#CL-${order.id}</td>
+    <td>
+        <div style="font-weight:600;">${order.customerEmail || 'Guest'}</div>
+        <span style="font-size:0.75rem; color:#999;">User ID: ${order.userId || 'N/A'}</span>
+    </td>
+    <td>${order.items || 'No items listed'}</td>
+    <td style="font-weight:600;">
+        LKR ${ (order.totalAmount != null) ? Number(order.totalAmount).toLocaleString() : '0.00' }
+    </td>
+    <td><span class="status-badge status-${order.status || 'PENDING'}">${order.status || 'PENDING'}</span></td>
+    <td>
+        ${order.status !== 'DELIVERED' ? `
+            <select class="action-select" onchange="updateStatus(${order.id}, this.value)">
+                <option disabled selected>Update To...</option>
+                <option value="SHIPPED">Shipped</option>
+                <option value="DELIVERED">Delivered</option>
+            </select>
+        ` : '<span style="color:var(--accent-green); font-size:0.8rem;"><i class="fas fa-check-circle"></i> Completed</span>'}
+    </td>
+  </tr>
+`).join('');
     }
   }
 
@@ -193,17 +196,18 @@
     if(!confirm(`Mark Order #${orderId} as ${newStatus}?`)) return;
 
     try {
-      // Add your real update API call here
-      /*
-      await fetch(\`http://localhost:8080/api/v1/orders/\${orderId}/status\`, {
-          method: 'PATCH',
-          headers: {
-              "Authorization": "Bearer " + token,
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ status: newStatus })
+      await fetch(`http://localhost:8080/api/v1/orders/${orderId}/status`, {
+        method: 'PATCH',
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status: newStatus })
       });
-      */
+
+      loadOrders(); // Reload the table from the DB
+      alert("Order updated successfully!");
+
 
       // Local Update for simulation
       const order = allOrders.find(o => o.id === orderId);

@@ -13,4 +13,10 @@ public interface OrderService {
     List<OrderDTO> getCustomerOrderHistory(String email);
 
     OrderDTO getOrderById(Long id);
+
+    List<OrderDTO> getAllOrders();
+
+    void updateStatus(Long id, String newStatus);
+
+
 }

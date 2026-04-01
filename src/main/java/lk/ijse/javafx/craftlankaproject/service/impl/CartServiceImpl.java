@@ -14,7 +14,6 @@ public class CartServiceImpl implements CartService {
 
     @Transactional
     public void clearCartByCustomerEmail(String email) {
-        // This assumes you have a CartRepository with a deleteByCustomerEmail method
         cartRepository.deleteByCustomerEmail(email);
     }
 }

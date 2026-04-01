@@ -32,10 +32,7 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOrder);
     }
 
-    /**
-     * 2. UPDATED METHOD: Get customer order history.
-     * Uses the service and DTOs for a cleaner response.
-     */
+
     @GetMapping("/my-activities")
     public ResponseEntity<List<OrderDTO>> getMyOrders(Authentication authentication) {
         // authentication.getName() returns the email from the logged-in user's token
@@ -45,10 +42,6 @@ public class OrderController {
         return ResponseEntity.ok(myOrders);
     }
 
-    /**
-     * 3. EXISTING METHOD: Handle PayHere Notify URL.
-     * This receives the POST from PayHere to confirm success/failure.
-     */
     @PostMapping("/payment-notification")
     public ResponseEntity<String> handlePayHereNotification(@RequestParam Map<String, String> params) {
         String orderId = params.get("order_id");
@@ -62,5 +55,19 @@ public class OrderController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order not found");
         }
+    }
+
+    @GetMapping("/my-orders")
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        // Fetch all orders and convert them to DTOs
+        List<OrderDTO> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<String> updateOrderStatus(@PathVariable Long id, @RequestBody Map<String, String> statusUpdate) {
+        String newStatus = statusUpdate.get("status");
+        orderService.updateStatus(id, newStatus);
+        return ResponseEntity.ok("Status Updated!");
     }
 }

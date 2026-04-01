@@ -159,19 +159,29 @@
             }
 
             // 3. Render Orders
-            container.innerHTML = orders.map(order => `
-                <div class="order-card">
-                    <div class="order-header">
-                        <span class="order-id">Order #CL-${order.id}</span>
-                        <span class="status-pill">${order.status || 'Success'}</span>
-                    </div>
-                    <div class="order-body">
-                        <p><strong>Items Purchased:</strong> ${order.items}</p>
-                        <p><strong>Total Investment:</strong> LKR ${order.amount.toLocaleString()}</p>
-                        <p><strong>Order Date:</strong> ${new Date().toLocaleDateString()}</p>
-                    </div>
-                </div>
-            `).join('');
+            container.innerHTML = orders.map(order => {
+                // Convert timestamp to a readable date
+                const formattedDate = order.orderDate ? new Date(order.orderDate).toLocaleDateString() : 'N/A';
+
+                // Safety check for amount
+                const displayAmount = (order.totalAmount != null)
+                    ? Number(order.totalAmount).toLocaleString()
+                    : "0.00";
+
+                return `
+        <div class="order-card">
+            <div class="order-header">
+                <span class="order-id">Order #CL-${order.id}</span>
+                <span class="status-pill status-${order.status}">${order.status || 'Success'}</span>
+            </div>
+            <div class="order-body">
+                <p><strong>Items Purchased:</strong> ${order.items || 'Wooden Craft'}</p>
+                <p><strong>Total Investment:</strong> LKR ${displayAmount}</p>
+                <p><strong>Order Date:</strong> ${formattedDate}</p>
+            </div>
+        </div>
+    `;
+            }).join('');
 
         } catch (error) {
             console.error("Fetch Error:", error);

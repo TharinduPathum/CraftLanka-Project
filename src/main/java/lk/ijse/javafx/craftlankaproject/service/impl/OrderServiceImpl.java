@@ -2,16 +2,18 @@ package lk.ijse.javafx.craftlankaproject.service.impl;
 
 import jakarta.transaction.Transactional;
 import lk.ijse.javafx.craftlankaproject.dto.OrderDTO;
-import lk.ijse.javafx.craftlankaproject.entity.Order;
-import lk.ijse.javafx.craftlankaproject.entity.OrderStatus;
-import lk.ijse.javafx.craftlankaproject.entity.Payment;
-import lk.ijse.javafx.craftlankaproject.entity.PaymentStatus;
+import lk.ijse.javafx.craftlankaproject.entity.*;
 import lk.ijse.javafx.craftlankaproject.repository.OrderRepository;
 import lk.ijse.javafx.craftlankaproject.repository.PaymentRepository;
+import lk.ijse.javafx.craftlankaproject.repository.UserRepository;
 import lk.ijse.javafx.craftlankaproject.service.OrderService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,21 +22,32 @@ import java.util.stream.Collectors;
 @Transactional
 public class OrderServiceImpl implements OrderService {
 
+    ModelMapper modelMapper;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Autowired
     private OrderRepository orderRepository;
 
     @Autowired
     private PaymentRepository paymentRepository;
 
-    @Override
+    @Transactional
     public OrderDTO createPendingOrder(OrderDTO orderDTO) {
+
+        User existingUser = userRepository.findByEmail(orderDTO.getCustomerEmail())
+                .orElseThrow(() -> new RuntimeException("User not found: " + orderDTO.getCustomerEmail()));
+
         Order order = new Order();
-        order.setCustomerEmail(orderDTO.getCustomerEmail());
-        order.setItems(orderDTO.getItems());
-        order.setAmount(orderDTO.getTotalAmount());
+        order.setCustomer(existingUser);
         order.setStatus(OrderStatus.PENDING);
-        Order savedOrder = orderRepository.save(order);
-        return mapToDTO(savedOrder);
+        order.setAmount(orderDTO.getTotalAmount());
+        order.setOrderDate(Timestamp.valueOf(LocalDateTime.now()));
+
+        Order savedOrder = orderRepository.saveAndFlush(order);
+
+        return modelMapper.map(savedOrder, OrderDTO.class);
     }
 
     @Override
@@ -43,13 +56,13 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
         if ("2".equals(payhereStatus)) {
-            // Use the Enums here!
-            order.setStatus(OrderStatus.PENDING); // Order is still pending shipping
+
+            order.setStatus(OrderStatus.PENDING);
 
             Payment payment = new Payment();
             payment.setOrder(order);
             payment.setAmount(order.getAmount().doubleValue());
-            payment.setStatus(PaymentStatus.COMPLETED); // Payment is done!
+            payment.setStatus(PaymentStatus.COMPLETED);
             payment.setPayherePaymentId(payherePaymentId);
 
             paymentRepository.save(payment);
@@ -69,19 +82,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO getOrderById(Long id) {
-        // 1. Fetch the order from the database using the repository
         Optional<Order> orderOptional = orderRepository.findById(id);
 
-        // 2. Check if the order exists
         if (orderOptional.isPresent()) {
-            // 3. Convert the Entity to a DTO and return it
             return mapToDTO(orderOptional.get());
         } else {
-            // 4. Return null or throw a custom "OrderNotFoundException"
-            // For a simple project, returning null is fine, but logging it is better.
+
             System.out.println("Order with ID " + id + " not found in database.");
             return null;
         }
+
     }
 
     private OrderDTO mapToDTO(Order order) {
@@ -99,4 +109,58 @@ public class OrderServiceImpl implements OrderService {
 
         return dto;
     }
+
+    @Override
+    public List<OrderDTO> getAllOrders() {
+
+        List<Order> orders = orderRepository.findAll();
+
+
+        return orders.stream().map(order -> {
+            OrderDTO dto = new OrderDTO();
+
+            dto.setId(order.getId());
+            dto.setItems(order.getItems());
+            dto.setPayherePaymentId(order.getPayherePaymentId());
+
+
+            dto.setTotalAmount(order.getAmount() != null ? order.getAmount() : BigDecimal.ZERO);
+
+            dto.setCustomerEmail(order.getCustomerEmail());
+
+
+            if (order.getOrderDate() != null) {
+                dto.setOrderDate(Timestamp.valueOf(order.getOrderDate().toLocalDateTime()));
+            }
+
+            if (order.getStatus() != null) {
+                dto.setStatus(order.getStatus().name());
+            }
+
+
+            if (order.getCustomer() != null) {
+                dto.setUserId(order.getCustomer().getId());
+            }
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateStatus(Long id, String newStatus) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + id));
+
+        try {
+
+            OrderStatus status = OrderStatus.valueOf(newStatus.toUpperCase());
+            order.setStatus(status);
+
+            orderRepository.save(order);
+
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid status value: " + newStatus);
+        }
+    }
+
 }

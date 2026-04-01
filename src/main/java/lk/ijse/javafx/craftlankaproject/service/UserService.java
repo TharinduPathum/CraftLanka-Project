@@ -11,9 +11,14 @@ import lk.ijse.javafx.craftlankaproject.repository.UserRepository;
 import lk.ijse.javafx.craftlankaproject.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -66,5 +71,6 @@ public class UserService {
         // Return the token AND the role name (e.g., "CUSTOMER" or "SELLER")
         return new AuthResponseDTO(token, user.getRole().name());
     }
+
 
 }

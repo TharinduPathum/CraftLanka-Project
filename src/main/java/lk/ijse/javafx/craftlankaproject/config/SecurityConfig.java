@@ -43,7 +43,7 @@ public class SecurityConfig {
                         // Allow anyone to access the NEW customer endpoint
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/customer/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/v1/orders/payment-notification").permitAll()
-
+                        .requestMatchers("/api/v1/orders/create").hasRole("CUSTOMER")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/products/update/**").permitAll()
                         // Auth paths
                         .requestMatchers("/api/v1/auth/**").permitAll()
@@ -52,6 +52,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/v1/index/**").permitAll()
 
+                        .requestMatchers("/api/v1/seller/**").hasAuthority("SELLER")
                         // Everything else (Seller actions) stays private
                         .anyRequest().authenticated()
                 )
